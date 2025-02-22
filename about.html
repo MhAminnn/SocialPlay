@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Saya - Animated</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 0.8s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .profile-section {
+            padding: 32px;
+            text-align: center;
+            border-bottom: 1px solid #e4e6eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 3px solid #1877f2;
+            animation: pulse 2s infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1c1e21;
+            margin-bottom: 6px;
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .title {
+            color: #1877f2;
+            font-size: 16px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            animation: fadeIn 0.8s ease-out 0.4s backwards;
+        }
+
+        .bio {
+            color: #65676b;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 0;
+            animation: fadeIn 0.8s ease-out 0.6s backwards;
+        }
+
+        .info-section {
+            padding: 28px 32px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            color: #050505;
+            font-size: 15px;
+            margin-bottom: 16px;
+            animation: slideIn 0.5s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateX(8px);
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item i {
+            width: 24px;
+            margin-right: 12px;
+            color: #1877f2;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-item:hover i {
+            transform: scale(1.2);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out 0.8s backwards;
+        }
+
+        .social-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1877f2;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #1877f2;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Style for back button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .back-button:hover {
+            background: #166fe5;
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .profile-section, .info-section {
+                padding: 24px 20px;
+            }
+            
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="profile-section">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Kembali
+            </a>
+            <div class="profile-img">
+                <img src="dev.jpg" alt="Foto Profil">
+            </div>
+            <h1 class="name">Muh Amin Arsyad</h1>
+            <div class="title">Hamba Allah</div>
+            <p class="bio">
+                Passionate developer dengan fokus pada pengembangan web modern dan user experience.
+            </p>
+            <div class="social-icons">
+                <a href="https://github.com/MhAminnn?tab=repositories" class="social-icon">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.facebook.com/share/1BoruybwyA/" class="social-icon">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.tiktok.com/@rektzxtech?_t=ZS-8u8AXhzUQC2&_r=1" class="social-icon">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+        <div class="info-section">
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                Makassar, Indonesia
+            </div>
+            <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                alienrektz@gmail.com
+            </div>
+            <div class="info-item">
+                <i class="fas fa-briefcase"></i>
+                Rektz Indonesia
+            </div>
+        </div>
+    </div>
+</body>
+</html>
