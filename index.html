@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialPlay Video Downloader</title>
+    <meta name="description" content="Download video TikTok tanpa watermark dengan SocialPlay. Dapatkan video dalam kualitas HD secara gratis.">
+    <meta name="keywords" content="download video TikTok, TikTok downloader, tanpa watermark, downloader tiktok, SocialPlay">
+    <meta name="author" content="Muh Amin Arsyad">
+    <link rel="canonical" href="https://socialplay.my.id/">
+    <title>SocialPlay - Download Video TikTok Tanpa Watermark</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
@@ -15,14 +19,14 @@
             <i class="fas fa-play-circle"></i>
             SocialPlay
         </div>
-        <button class="menu-toggle" id="menuToggle">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
             <i class="fas fa-bars"></i>
             <span>Menu</span>
         </button>
     </nav>
 
     <div class="fullscreen-menu" id="fullscreenMenu">
-        <button class="close-menu" id="closeMenu">
+        <button class="close-menu" id="closeMenu" aria-label="Close menu">
             <i class="fas fa-times"></i>
         </button>
         <a href="index.html" class="menu-item">
@@ -45,32 +49,30 @@
 
     <div class="container">
         <div class="hero">
-          
-            <h1 class="animate__animated animate__fadeInDown">SocialPlay <br> Downloader</h1>
+            <h1 class="judul">Download Video TikTok Tanpa Watermark</h1>
             <p>Get instant previews and information about any TikTok video with just a URL!</p>
-            
             <div class="input-section">
                 <div class="input-group">
-                    <input type="text" id="urlInput" placeholder="Paste Url TikTok">
-                    <button id="fetchBtn">
+                    <input type="text" id="urlInput" placeholder="Paste URL TikTok" aria-label="Paste URL TikTok">
+                    <button id="fetchBtn" aria-label="Search Video">
                         <i class="fas fa-search"></i>
                         Search Video
                     </button>
                 </div>
             </div>
         </div>
-
+        
         <div class="loading" id="loadingSpinner">
             <div class="spinner"></div>
-            <p style="margin-top: 1rem; color: var(--gray-700);"> Sedang mencari...</p> <!-- Teks tambahan -->
+            <p style="margin-top: 1rem; color: var(--gray-700);"> Sedang mencari...</p>
         </div>
-
+        
         <div id="videoPreview">
             <div class="preview-container">
-                <img id="previewImage" src="" alt="Video Preview">
+                <img id="previewImage" src="" alt="Video Preview" aria-hidden="true">
                 <div id="videoInfo">
                     <h2 style="margin-bottom: 2rem; color: var(--primary);">Video Information</h2>
-<hr>
+                    <hr>
                     <div class="info-item">
                         <span class="info-label">Creator:</span>
                         <span class="info-value" id="authorName"></span>
@@ -83,14 +85,38 @@
                         <span class="info-label">Comments:</span>
                         <span class="info-value" id="commentCount"></span>
                     </div>
-                    <hr style="margin: 1rem 0; border: 1px solid var(--gray-200);"> <!-- Garis horizontal -->
+                    <hr style="margin: 1rem 0; border: 1px solid var(--gray-200);">
                     <div class="button-container">
-                        <button id="downloadBtn">
+                        <button id="downloadBtn" aria-label="Download Video">
                             <i class="fas fa-download"></i>
                             Download Video
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>   
+        
+    <div class="containerr">
+        <div>
+            <h1>
+                <span class="block">Kenapa</span>
+                <span class="block">Harus SocialPlay?</span>
+            </h1>
+            <br>
+            <p class="satu">
+                Download TikTok videos for free, no watermark, Full HD, and ad-free! 
+                Save TikTok Videos & Stories in MP4 format with the best quality and HD resolution, hassle-free and ad-free.
+            </p>
+            <button class="coba">Coba Sekarang</button>
+        </div>
+    </div>
+     
+    <div class="relative">
+        <img alt="Smartphone displaying Instagram video with download icons" class="w-60 mx-60" src="downloader_instagram.png"/>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 p-2 rounded-full"></div>
             </div>
         </div>
     </div>
@@ -99,7 +125,8 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 SocialPlay. All rights reserved.</p> <hr>
+            <p>&copy; 2025 SocialPlay. All rights reserved.</p>
+            <hr>
             <div class="supported-platforms">
                 <p>Supported platforms: TikTok</p>
                 <p>made with ❤️ Muh Amin Arsyad</p>
