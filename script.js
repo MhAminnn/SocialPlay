@@ -1,21 +1,37 @@
-// Toggle menu
+// Seleksi elemen-elemen yang diperlukan
 const menuToggle = document.getElementById('menuToggle');
 const fullscreenMenu = document.getElementById('fullscreenMenu');
 const closeMenu = document.getElementById('closeMenu');
 
+// Event listener untuk membuka menu
 menuToggle.addEventListener('click', () => {
     fullscreenMenu.classList.add('active');
+    // Tambahkan class untuk mencegah scroll pada body saat menu terbuka
+    document.body.style.overflow = 'hidden';
 });
 
+// Event listener untuk menutup menu
 closeMenu.addEventListener('click', () => {
     fullscreenMenu.classList.remove('active');
+    // Kembalikan scroll pada body
+    document.body.style.overflow = '';
 });
 
-// Close menu when clicking outside
+// Tutup menu saat mengklik di luar menu
 document.addEventListener('click', (e) => {
     if (!fullscreenMenu.contains(e.target) && !menuToggle.contains(e.target)) {
         fullscreenMenu.classList.remove('active');
+        document.body.style.overflow = '';
     }
+});
+
+// Tambahkan event listener untuk menutup menu saat item menu diklik
+const menuItems = document.querySelectorAll('.menu-item');
+menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        fullscreenMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    });
 });
 
 // Video data fetching
@@ -87,7 +103,7 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
         try {
             // Change button text
             const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.innerText = 'Proses download berjalan:)';
+            downloadBtn.innerText = 'Memulai Unduhan ⚡';
             downloadBtn.disabled = true; // Disable button during download
 
             // Show loading spinner
@@ -155,3 +171,10 @@ document.getElementById('urlInput').addEventListener('keypress', (e) => {
 // Initialize loading spinner
 document.getElementById('loadingSpinner').style.display = 'none';
 document.getElementById('downloadBtn').style.display = 'none';
+
+// Tombol Coba Sekarang
+document.querySelector('.coba').addEventListener('click', () => {
+    document.getElementById('urlInput').focus();
+    // Scroll ke bagian input
+    document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
+});
