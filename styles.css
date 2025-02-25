@@ -47,7 +47,7 @@ nav {
 .logo {  
     font-size: 1.3rem; 
     animation: slideIn 0.5s ease-out;
-transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
     font-weight: 700;  
     background: var(--gradient);  
     -webkit-background-clip: text;  
@@ -77,39 +77,56 @@ transition: transform 0.3s ease;
     box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);  
 }  
   
+/* Navbar yang terbuka dari bawah ke atas */
 .fullscreen-menu {  
     position: fixed;  
-    top: 0;  
-    left: -300px;  
-    width: 300px;  
+    bottom: -100%; /* Mulai dari bawah layar (tersembunyi) */
+    left: 0;  
+    width: 100%; /* Menu selebar layar */
     height: 100%;  
-    background: var(--light);  
-    box-shadow: 2px 0 20px rgba(0,0,0,0.1);  
+    background: #1E59F2;  
+    box-shadow: 0 -2px 20px rgba(0,0,0,0.1);  
     transition: all 0.3s ease-in-out;  
     z-index: 1001;  
     padding-top: 5rem;  
 }  
   
 .fullscreen-menu.active {  
-    left: 0;  
-}  
-  
+    bottom: 0; /* Ketika aktif, tampilkan dari bawah */
+}
+
 .menu-item {  
     display: flex;  
-    align-items: center;  
     padding: 1.2rem 2rem;  
-    color: var(--gray-700);  
+    color: #FFFFFF;
+    margin-top: 8px;
+    text-align: center;
     text-decoration: none;  
     transition: all 0.3s ease;  
-    border-left: 4px solid transparent;  
+    border-left: 5px; /* Hapus border kiri */
+    border-bottom: 4px solid transparent; /* Tambahkan border bawah sebagai gantinya */
 }  
   
 .menu-item:hover {  
     background: var(--gray-50);  
     color: var(--primary);  
-    border-left: 4px solid var(--primary);  
-}  
-  
+    border-left: 0;
+    border-bottom: 4px solid var(--primary); /* Border bawah saat hover */
+}
+
+/* Animasi untuk menu-item saat menu terbuka */
+.fullscreen-menu.active .menu-item {
+    animation: slideUpItem 0.4s ease-out forwards;
+    opacity: 0;
+}
+
+/* Menu item akan muncul satu per satu dengan delay */
+.fullscreen-menu.active .menu-item:nth-child(1) { animation-delay: 0.1s; }
+.fullscreen-menu.active .menu-item:nth-child(2) { animation-delay: 0.2s; }
+.fullscreen-menu.active .menu-item:nth-child(3) { animation-delay: 0.3s; }
+.fullscreen-menu.active .menu-item:nth-child(4) { animation-delay: 0.4s; }
+.fullscreen-menu.active .menu-item:nth-child(5) { animation-delay: 0.5s; }
+
 .menu-item i {  
     margin-right: 1rem;  
     font-size: 1.2rem;  
@@ -119,16 +136,22 @@ transition: transform 0.3s ease;
     position: absolute;  
     top: 1rem;  
     right: 1rem;  
-    background: none;  
+    background: #FFFFFF;
+    border-radius: 10px;
+    width: 3px;
+    height: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;  
-    font-size: 1.5rem;  
-    color: var(--gray-700);  
+    font-size: 1.2rem;  
+    color: #000000;  
     cursor: pointer;  
-    padding: 0.5rem;  
-    transition: all 0.3s ease;  
+    transition: all 0.2s ease;  
 }  
   
 .close-menu:hover {  
+    background: rgba(255, 255, 255, 0.2);
     color: var(--primary);  
     transform: rotate(90deg);  
 }  
@@ -186,7 +209,7 @@ h1 {
     background-color: #2563eb;  
     color: white;  
     animation: slideIn 0.5s ease-out;
-transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
     font-size: 1rem;  
     font-weight: 600;  
     margin-left: 10px;  
@@ -229,6 +252,34 @@ button:hover {
     0% { transform: rotate(0deg); }  
     100% { transform: rotate(360deg); }  
 }  
+
+@keyframes slideUpItem {
+    from { 
+        transform: translateY(30px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateX(-20px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
   
 .input-section {  
     background: var(--light);  
@@ -355,19 +406,47 @@ button:hover {
     opacity: 0;  
 }  
   
-footer {  
-    background: #1E59F2;  
-    color: var(--light);  
-    padding: 2rem;  
-    margin-top: 4rem;  
-}  
-  
-.footer-content {  
-    max-width: 1200px;  
-    margin: 0 auto;  
-    text-align: center;  
-}  
-  
+.populer {
+    text-align: center;
+}
+       
+.title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 26px;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #ec4899, #a855f7, #14b8a6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tanpa-ribet {
+    text-align: center;
+}
+
+.title-ribet {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 100px;
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.social-icons a {
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.social-icons a:hover {
+    opacity: 0.7;
+}
+
 .relative {  
     display: flex;  
     justify-content: center;  
@@ -391,28 +470,20 @@ footer {
     .input-group {  
         flex-direction: column;  
     }  
-  
-    .fullscreen-menu {  
-        width: 250px;  
-    }  
-  
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-@keyframes slideIn {
-    from { 
-        transform: translateX(-20px); 
-        opacity: 0; 
-    }
-    to { 
-        transform: translateX(0); 
-        opacity: 1; 
-    }
-}
+    
     #previewImage {  
         height: 200px;  
     }  
+}
+
+@media (min-width: 768px) {
+    .title {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .title {
+        font-size: 3.75rem;
+    }
 }
