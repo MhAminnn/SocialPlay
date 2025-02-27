@@ -34,6 +34,21 @@ menuItems.forEach(item => {
     });
 });
 
+// Fungsi untuk menampilkan loading spinner dengan pesan kustom
+function showSpinner(message) {
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const loadingText = document.getElementById('loadingText');
+    
+    loadingText.textContent = message;
+    loadingSpinner.style.display = 'flex';
+}
+
+// Fungsi untuk menyembunyikan loading spinner
+function hideSpinner() {
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    loadingSpinner.style.display = 'none';
+}
+
 // Video data fetching
 async function fetchVideoData(videoUrl) {
     const apiKey = '5e42e42d02msh2e7abfe7aed9d46p149460jsnb67dbb68e538';
@@ -52,7 +67,7 @@ async function fetchVideoData(videoUrl) {
         }
     };
 
-    document.getElementById('loadingSpinner').style.display = 'flex';
+    showSpinner("Sedang Mencari..."); // Tampilkan spinner untuk pencarian
     document.getElementById('videoPreview').style.display = 'none';
 
     try {
@@ -70,7 +85,7 @@ async function fetchVideoData(videoUrl) {
                 document.getElementById('previewImage').src = data.cover;
             }
 
-            document.getElementById('loadingSpinner').style.display = 'none';
+            hideSpinner(); // Sembunyikan spinner setelah data berhasil diambil
             document.getElementById('videoPreview').style.display = 'block';
             document.getElementById('downloadBtn').style.display = 'block';
 
@@ -78,10 +93,11 @@ async function fetchVideoData(videoUrl) {
             document.getElementById('downloadBtn').setAttribute('data-url', data.play || data.hdplay);
         } else {
             alert('No data found for this video.');
+            hideSpinner(); // Sembunyikan spinner jika tidak ada data
         }
     } catch (error) {
         console.error(error);
-        document.getElementById('loadingSpinner').style.display = 'none';
+        hideSpinner(); // Sembunyikan spinner jika terjadi kesalahan
         alert('Error fetching video data. Please try again.');
     }
 }
@@ -100,15 +116,8 @@ document.getElementById('fetchBtn').addEventListener('click', () => {
 document.getElementById('downloadBtn').addEventListener('click', async () => {
     const downloadUrl = document.getElementById('downloadBtn').getAttribute('data-url');
     if (downloadUrl) {
+        showSpinner("Sedang Mengunduh Harap Bersabar:)");// Tampilkan spinner untuk pengunduhan
         try {
-            // Change button text
-            const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.innerText = 'Memulai Unduhan ⚡';
-            downloadBtn.disabled = true; // Disable button during download
-
-            // Show loading spinner
-            document.getElementById('loadingSpinner').style.display = 'flex';
-
             // Fetch the video file
             const response = await fetch(downloadUrl);
             if (!response.ok) throw new Error('Network response was not ok');
@@ -129,52 +138,51 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
             showNotification('Download completed successfully!');
 
             // Reset button text and state
-            downloadBtn.innerText = 'Download Video';
-            downloadBtn.disabled = false; // Re-enable button
+            document.getElementById('downloadBtn').innerText = 'Download Video';
+            document.getElementById('downloadBtn').disabled = false; // Re-enable button
 
-            // Hide loading spinner
-            document.getElementById('loadingSpinner').style.display = 'none';
+            // Sembunyikan spinner setelah selesai mengunduh
+            hideSpinner();
         } catch (error) {
             console.error(error);
             alert('Error downloading video. Please try again.');
-            document.getElementById('loadingSpinner').style.display = 'none';
+            hideSpinner(); // Sembunyikan spinner jika terjadi kesalahan
         }
     }
 });
 
-// Function to show notification
+// Fungsi untuk menampilkan notifikasi
 function showNotification(message) {
-    const notificationBox = document.getElementById('notificationBox');
-    notificationBox.innerText = message;
-    notificationBox.style.display = 'block'; // Show the notification
-    notificationBox.style.right = '20px'; // Move into view
-    notificationBox.style.opacity = '1'; // Make it visible
-
-    setTimeout(() => {
-        notificationBox.style.right = '-300px'; // Move out of view
-        notificationBox.style.opacity = '0'; // Fade out
-    }, 6000); // Keep it visible for 6 seconds
-}
-
-// Add enter key support for input
-document.getElementById('urlInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const videoUrl = e.target.value;
-        if (videoUrl) {
-            fetchVideoData(videoUrl);
-        } else {
-            alert('Please enter a valid TikTok video URL.');
-        }
+    // Periksa apakah elemen notifikasi sudah ada
+    let notification = document.getElementById('notification');
+    
+    // Jika belum ada, buat elemen baru
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.right = '20px';
+        notification.style.padding = '10px 20px';
+        notification.style.backgroundColor = '#28a745';
+        notification.style.color = 'white';
+        notification.style.borderRadius = '5px';
+        notification.style.zIndex = '9999';
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease-in-out';
+        document.body.appendChild(notification);
     }
-});
-
-// Initialize loading spinner
-document.getElementById('loadingSpinner').style.display = 'none';
-document.getElementById('downloadBtn').style.display = 'none';
-
-// Tombol Coba Sekarang
-document.querySelector('.coba').addEventListener('click', () => {
-    document.getElementById('urlInput').focus();
-    // Scroll ke bagian input
-    document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
-});
+    
+    // Set pesan notifikasi
+    notification.innerText = message;
+    
+    // Tampilkan notifikasi
+    setTimeout(() => {
+        notification.style.opacity = '1';
+    }, 10);
+    
+    // Hilangkan notifikasi setelah 3 detik
+    setTimeout(() => {
+        notification.style.opacity = '0';
+    }, 3000);
+}
