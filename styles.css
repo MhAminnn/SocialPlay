@@ -19,7 +19,7 @@
 }  
   
 body {  
-    background: var(--gray-50);  
+    background: #212121;
     color: var(--dark);  
     line-height: 1.6;  
 }  
@@ -29,7 +29,9 @@ nav {
     justify-content: space-between;  
     align-items: center;  
     padding: 1rem 2rem;  
-    background: rgba(255, 255, 255, 0.95);  
+    background-image: url('space.jpg');
+    background-position: center;
+    background-size: cover;
     backdrop-filter: blur(10px);  
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);  
     position: fixed;  
@@ -49,16 +51,16 @@ nav {
     animation: slideIn 0.5s ease-out;
     transition: transform 0.3s ease;
     font-weight: 700;  
-    background: var(--gradient);  
+    color:#ffffff; 
     -webkit-background-clip: text;  
-    -webkit-text-fill-color: transparent;  
+    -webkit-text-fill-color: transparen;
     display: flex;  
     align-items: center;  
     gap: 0.5rem;  
 }  
   
 .menu-toggle {  
-    background: var(--gradient);  
+    
     color: var(--light);  
     border: none;  
     padding: 0.6rem 1.3rem;  
@@ -74,17 +76,20 @@ nav {
   
 .menu-toggle:hover {  
     transform: translateY(-2px);  
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);  
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+    background:#002AFF;
 }  
   
 /* Navbar yang terbuka dari bawah ke atas */
 .fullscreen-menu {  
+  
     position: fixed;  
-    bottom: -100%; /* Mulai dari bawah layar (tersembunyi) */
+    bottom: -100%; 
     left: 0;  
     width: 100%; /* Menu selebar layar */
-    height: 100%;  
-    background: #1E59F2;  
+    height: 100%; 
+    background-repeat: no-repeat;
+    background-image: url('space.jpg'); 
     box-shadow: 0 -2px 20px rgba(0,0,0,0.1);  
     transition: all 0.3s ease-in-out;  
     z-index: 1001;  
@@ -108,7 +113,7 @@ nav {
 }  
   
 .menu-item:hover {  
-    background: var(--gray-50);  
+    background: #ffffff;  
     color: var(--primary);  
     border-left: 0;
     border-bottom: 4px solid var(--primary); /* Border bawah saat hover */
@@ -136,7 +141,8 @@ nav {
     position: absolute;  
     top: 1rem;  
     right: 1rem;  
-    background: #FFFFFF;
+    background: var(--gradient);  
+    color: var(--light);  
     border-radius: 10px;
     width: 3px;
     height: 3px;
@@ -145,7 +151,6 @@ nav {
     justify-content: center;
     border: none;  
     font-size: 1.2rem;  
-    color: #000000;  
     cursor: pointer;  
     transition: all 0.2s ease;  
 }  
@@ -158,15 +163,22 @@ nav {
   
 .container {  
     max-width: 1200px;  
-    margin: 7rem auto 2rem;  
-    padding: 0 1rem;  
+    margin: 7rem auto 2rem;
+    background: #212121;
+    margin-bottom: 100px;
+    padding: 0 1rem;
+    
 }  
   
 .hero {  
     text-align: center;  
     margin-bottom: 3rem;  
+    background-repeat: no-repeat;
     padding: 3rem;  
-    background: #1E59F2;  
+    background-image: url('space.jpg');
+    background-position: center;
+    background-size: cover ;
+    filter: brightness(100%);
     border-radius: 20px;  
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);  
 }  
@@ -185,20 +197,23 @@ nav {
     display: flex;  
     align-items: left;  
     justify-content: center;  
-    text-align: center;  
-    background-color: #f9fafb;  
+    text-align: center;
+    background-image: url('space.jpg');
+    background-color: #0d0d0d;
+    border-radius: 5px;
+    margin-bottom: 60px;
 }  
   
 h1 {  
     margin-top: 20px;  
     font-size: 2rem;  
     font-weight: bold;  
-    color: #1f2937;  
+    color: #ffffff;  
     line-height: 2.2rem;  
 }  
   
 .satu {  
-    color: #4b5563;  
+    color: #ffffff;  
     font-size: 1rem;  
     text-align: left;  
     margin-left: 10px;  
@@ -206,7 +221,7 @@ h1 {
 }  
   
 .coba {  
-    background-color: #2563eb;  
+    background-color: #06D521;  
     color: white;  
     animation: slideIn 0.5s ease-out;
     transition: transform 0.3s ease;
@@ -222,8 +237,11 @@ h1 {
     cursor: pointer;  
 }  
   
+.coba:hover {
+  background:#0d6efd;
+}
 button:hover {  
-    background-color: #1d4ed8;  
+    background-color: #0d6efd;  
 }  
 
 .hero p {  
@@ -290,7 +308,9 @@ button:hover {
 }
   
 .input-section {  
-    background: var(--light);  
+    background-image: url('space.jpg');
+    background-size: cover;
+    background-position: center;
     padding: 2rem;  
     border-radius: 20px;  
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);  
@@ -302,7 +322,11 @@ button:hover {
     max-width: 700px;  
     margin: 0 auto;  
 }  
-  
+ 
+#fetchBtn:hover {
+  background: #0d6efd;
+}
+ 
 #urlInput {  
     flex: 1;  
     padding: 1rem 1.5rem;  
@@ -333,7 +357,7 @@ button {
 }  
   
 button:hover {  
-    background-color: #3b5998;  
+    background-color: #0d6efd;  
     color: var(--light);  
     transform: translateY(-2px);  
     box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);  
@@ -341,7 +365,7 @@ button:hover {
   
 #videoPreview {  
     display: none;  
-    background: var(--light);  
+    background: #ffffff;
     border-radius: 20px;  
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);  
     margin-top: 2rem;  
@@ -368,7 +392,7 @@ button:hover {
     width: 100%;  
     max-width: 500px;  
     padding: 1.5rem;  
-    background: var(--gray-50);  
+    background-image: url('space.jpg');
     border-radius: 12px;  
 }  
   
@@ -380,12 +404,12 @@ button:hover {
 }  
   
 .info-label {  
-    color: var(--gray-700);  
+    color: #ffffff;
     font-weight: 500;  
 }  
   
 .info-value {  
-    color: var(--primary);  
+    color: #ffffff;
     font-weight: 600;  
 }  
   
@@ -398,7 +422,10 @@ button:hover {
     width: 100%;  
     justify-content: center;  
 }  
-  
+ 
+#downloadBtn:hover {
+ background: #0d6efd;
+}
 .notification {  
     display: none;  
     position: fixed;  
@@ -422,7 +449,7 @@ button:hover {
     font-size: 1.6rem;
     font-weight: bold;
     line-height: 1.2;
-    margin-bottom: 26px;
+    margin-bottom: 10px;
 }
 
 .gradient-text {
@@ -436,19 +463,36 @@ button:hover {
 }
 
 .title-ribet {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.4rem;
+    font-weight: 600;
     line-height: 1.2;
     margin-bottom: 100px;
+    
 }
 
+.title-gradient {
+  font-size: 1.1em;
+  background: linear-gradient(to right, #ec4899, #a855f7, #14b8a6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
 .footer-content {
-    text-align: center;
+ text-align: center;
+ color: white;
+font-weight:400;
+padding: 20px;
 }
 
+.footer-image {
+  background-image: url('space.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(110%) saturate(90%);
+}
 .social-icons a {
     font-size: 24px;
     text-decoration: none;
+    
 }
 
 .social-icons a:hover {
@@ -473,6 +517,84 @@ button:hover {
     margin-top: 1rem;  
     color: var(--gray-200);  
 }  
+
+.wrapper {
+    width: 80%;
+    margin: 50px auto;
+    background-image: url('bgMobile.jpg');
+    border-radius: 10px;
+    padding: 20px; /* Padding untuk kotak biru */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dua kolom */
+    gap: 20px; /* Jarak antar card */
+}
+
+.item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s;
+    height: 150px; /* Ukuran tinggi card */
+    display: flex;
+    flex-direction: column; /* Vertically stack icon and text */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    overflow: hidden; /* Prevent text overflow */
+}
+
+.item:hover h2 {
+    transform: translateY(-5px);
+    background: #000000;
+    color: #ffffff !important;
+}
+
+.item:hover {
+  transform: translateY(-5px);
+  background: #000000;
+  color: #ffffff !important;
+}
+.title-card {
+    color: #333;
+    font-size: 1em; /* Ukuran font judul */
+    margin: 10px 0 0; /* Add margin for spacing */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow text */
+}
+
+
+.method {
+ margin-top: 50px;
+ font-size: 1.8rem ;
+ text-align: center;
+  
+}
+
+.cara-method {
+  font-size: 1.8rem;
+  text-align: center;
+  line-height: 33px;
+    animation: slideIn 0.5s ease-out;
+    transition: transform 0.3s ease;
+    background: var(--gradient);  
+    -webkit-background-clip: text;  
+    -webkit-text-fill-color: transparent;  
+}
+
+.fa-arrow-down {
+  animation: pulse 2s infinite;
+}
+
+.symbol {
+    font-size: 2em; /* Ukuran ikon */
+    color: #007bff; /* Warna ikon */
+}
+
+
+
+
   
 @media (max-width: 768px) {  
     .input-group {  
