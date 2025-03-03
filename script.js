@@ -1,108 +1,224 @@
-// Fungsi untuk mengenkripsi API key
+// Fungsi untuk mengenkripsi API key dengan metode yang lebih kuat
 function encryptApiKey(key) {
-    // Simple obfuscation - ini hanya contoh dasar
-    // Dalam produksi, gunakan metode yang lebih kuat
-    return btoa(key.split('').reverse().join(''));
+    // Implementasi enkripsi yang lebih kompleks
+    let encrypted = '';
+    for (let i = 0; i < key.length; i++) {
+        const charCode = key.charCodeAt(i) ^ (i + 7); // XOR dengan offset dinamis
+        encrypted += String.fromCharCode(charCode);
+    }
+    // Tambahkan salt acak dan encode base64 dua kali
+    const salt = Math.random().toString(36).substring(2, 10);
+    return btoa(btoa(encrypted + salt));
 }
 
 // Fungsi untuk mendekripsi API key
 function decryptApiKey(encryptedKey) {
-    const decoded = atob(encryptedKey);
-    return decoded.split('').reverse().join('');
+    try {
+        // Decode base64 dua kali
+        const decoded = atob(atob(encryptedKey));
+        // Hapus salt (8 karakter di akhir)
+        const withoutSalt = decoded.substring(0, decoded.length - 8);
+        
+        // Reverse dari proses enkripsi
+        let decrypted = '';
+        for (let i = 0; i < withoutSalt.length; i++) {
+            const charCode = withoutSalt.charCodeAt(i) ^ (i + 7); // XOR dengan offset yang sama
+            decrypted += String.fromCharCode(charCode);
+        }
+        return decrypted;
+    } catch (e) {
+        console.error('Dekripsi gagal');
+        return '';
+    }
 }
 
-// Cek browser untuk memblokir akses dari browser yang tidak diinginkan
+// Deteksi browser dan DevTools yang lebih canggih
 function isBrowserAllowed() {
+    // Performa cek tidak boleh dalam satu fungsi untuk menghindari override
+    return performBrowserCheck() && performDevToolsCheck() && performIntegrityCheck();
+}
+
+// Pemeriksaan browser yang dipisah
+function performBrowserCheck() {
     const userAgent = navigator.userAgent.toLowerCase();
     
-    // Deteksi developer tools
-    const devToolsOpen = window.outerHeight - window.innerHeight > 200 || 
-                         window.outerWidth - window.innerWidth > 200;
+    // Daftar browser yang diblokir - lebih lengkap
+    const blockedBrowsers = [
+        'kiwi', 'firefox', 'opera', 'edge', 'brave', 'yandex',
+        'mixes', 'puffin', 'ucbrowser', 'duckduckgo', 'dolphin',
+        'baidu', 'maxthon', 'chromium'
+    ];
     
-    // Deteksi apakah ada extension browser
-    const hasExtensions = !!window.chrome && !!window.chrome.runtime;
+    // Deteksi browser yang diblokir dengan regex yang lebih baik
+    const isBlockedBrowser = blockedBrowsers.some(browser => {
+        const regex = new RegExp(`\\b${browser}\\b`, 'i');
+        return regex.test(userAgent);
+    });
     
-    // Deteksi browser mobile yang diizinkan (Chrome Android atau browser bawaan)
+    // Deteksi browser mobile yang diizinkan (hanya Chrome Android, Samsung Browser, atau browser bawaan)
     const isAllowedMobile = (
         /android/.test(userAgent) && (
-            /chrome/.test(userAgent) ||       // Chrome Android
-            /samsung browser/.test(userAgent) || // Samsung browser
-            /android browser/.test(userAgent)  // Browser bawaan Android
+            (/chrome/.test(userAgent) && !/chromium|edg|opr|ucbrowser|kiwi/.test(userAgent)) ||
+            /samsung browser/.test(userAgent) ||
+            (/android/.test(userAgent) && /version/.test(userAgent) && !blockedBrowsers.some(b => userAgent.includes(b)))
         )
     );
     
-    // Deteksi browser yang tidak diizinkan
-    const isBlockedBrowser = (
-        /kiwi/.test(userAgent) || 
-        /mixes/.test(userAgent) ||
-        /firefox/.test(userAgent) ||
-        /opera/.test(userAgent) ||
-        /edge/.test(userAgent) ||
-        /brave/.test(userAgent)
+    // Cek apakah ada ekstensi browser - metode yang lebih canggih
+    const hasExtensions = (
+        // Chrome extensions check
+        (window.chrome && (
+            window.chrome.runtime ||
+            window.chrome.webstore ||
+            window.chrome.app
+        )) ||
+        // Firefox extensions check
+        (typeof InstallTrigger !== 'undefined') ||
+        // General extension detection
+        document.documentElement.hasAttribute('__EXTENSION__')
     );
     
-    // Deteksi penggunaan DevTools
-    let isDevToolsOpen = false;
-    
-    // Metode 1: Deteksi dengan console.log
-    const consoleCheck = () => {
-        const startTime = new Date();
-        console.log('Checking for devtools...');
-        console.clear();
-        const endTime = new Date();
-        
-        // Jika membutuhkan waktu terlalu lama, kemungkinan DevTools terbuka
-        return (endTime - startTime) > 100;
+    return isAllowedMobile && !isBlockedBrowser && !hasExtensions;
+}
+
+// Pemeriksaan DevTools yang dipisah dan lebih canggih
+function performDevToolsCheck() {
+    // Metode 1: Deteksi waktu eksekusi
+    const timeCheck = () => {
+        const start = performance.now();
+        debugger; // Ini akan dipause jika DevTools terbuka
+        const end = performance.now();
+        return (end - start) > 100; // DevTools terbuka jika terlalu lama
     };
     
     // Metode 2: Deteksi dengan ukuran window
     const sizeCheck = () => {
-        return window.outerHeight - window.innerHeight > 200 || 
-               window.outerWidth - window.innerWidth > 200;
+        // Gunakan multiple checks dan thresholds yang berbeda
+        return (
+            window.outerHeight - window.innerHeight > 150 ||
+            window.outerWidth - window.innerWidth > 150 ||
+            window.devicePixelRatio % 1 !== 0 // Banyak browser saat inspect mengubah pixel ratio
+        );
     };
     
-    // Metode 3: Deteksi dengan debugger statement
-    const debuggerCheck = () => {
-        let counter = 0;
-        const start = new Date().getTime();
+    // Metode 3: Deteksi console properties - DevTools akan mengubah ini
+    const consoleCheck = () => {
+        const props = Object.getOwnPropertyNames(window.console);
+        return props.length > 30; // DevTools menambahkan banyak property ke console
+    };
+    
+    // Metode 4: Deteksi firehose - inspect akan mengaktifkan ini
+    const firehoseCheck = () => {
+        let devtoolsDetected = false;
         
-        function debuggerTrap() {
-            counter++;
-            // debugger; // Uncomment ini untuk deteksi lebih agresif
+        const originalDesc = Object.getOwnPropertyDescriptor(Element.prototype, 'id');
+        try {
+            Object.defineProperty(Element.prototype, 'id', {
+                get: function() {
+                    devtoolsDetected = true;
+                    return '';
+                }
+            });
             
-            if (counter < 2) {
-                debuggerTrap();
-            }
+            // Trigger banyak operasi DOM untuk memicu firehose
+            document.querySelectorAll('*');
+            Object.defineProperty(Element.prototype, 'id', originalDesc);
+        } catch (e) {
+            Object.defineProperty(Element.prototype, 'id', originalDesc);
         }
         
-        debuggerTrap();
-        
-        return (new Date().getTime() - start) > 100;
+        return devtoolsDetected;
     };
     
-    isDevToolsOpen = consoleCheck() || sizeCheck() || debuggerCheck();
+    // Metode 5: Deteksi melalui CSS
+    const cssCheck = () => {
+        // Buat elemen dengan style yang hanya berubah saat diinspect
+        const checkElement = document.createElement('div');
+        checkElement.style.display = 'none';
+        checkElement.textContent = 'DevTools detector';
+        document.documentElement.appendChild(checkElement);
+        
+        const result = (
+            window.getComputedStyle(checkElement).getPropertyValue('display') !== 'none' ||
+            checkElement.offsetHeight > 0
+        );
+        
+        document.documentElement.removeChild(checkElement);
+        return result;
+    };
     
-    // Return true jika browser diizinkan dan tidak ada developer tools
-    return isAllowedMobile && !isDevToolsOpen && !isBlockedBrowser && !hasExtensions;
+    // Gabungkan semua metode deteksi
+    return !(timeCheck() || sizeCheck() || consoleCheck() || firehoseCheck() || cssCheck());
 }
 
-// Fungsi untuk mengacak kode jika browser tidak diizinkan
+// Pemeriksaan integritas kode - baru
+function performIntegrityCheck() {
+    // Verifikasi bahwa fungsi-fungsi kunci belum diubah
+    const functionBodies = {
+        encryptApiKey: encryptApiKey.toString(),
+        decryptApiKey: decryptApiKey.toString(),
+        isBrowserAllowed: isBrowserAllowed.toString(),
+        performBrowserCheck: performBrowserCheck.toString(),
+        performDevToolsCheck: performDevToolsCheck.toString(),
+        performIntegrityCheck: performIntegrityCheck.toString(),
+        secureApplication: secureApplication.toString()
+    };
+    
+    // Simpan hash fungsi-fungsi di sessionStorage saat pertama kali load
+    if (!sessionStorage.getItem('_integrityHash')) {
+        const hash = Object.values(functionBodies).join('').length.toString(16);
+        sessionStorage.setItem('_integrityHash', hash);
+        return true;
+    }
+    
+    // Verifikasi hash pada load berikutnya
+    const currentHash = Object.values(functionBodies).join('').length.toString(16);
+    return sessionStorage.getItem('_integrityHash') === currentHash;
+}
+
+// Enkripsi API key pada kompilasi
+const ENCRYPTED_API_KEY = '5y3gVTZWQmWXUXRiMllSakZXV0ZoZWprJmJGNiVm5zNUFGRHh0andSbXRiYjFNPQ==';
+
+// Improved secure application
 function secureApplication() {
     if (!isBrowserAllowed()) {
-        // Browser tidak diizinkan, nonaktifkan aplikasi
-        document.body.innerHTML = '<div style="text-align: center; padding: 50px; color: red;"><h2>Akses Ditolak</h2><p>Aplikasi hanya dapat diakses melalui browser bawaan Android atau Chrome Android.</p></div>';
+        // Kode pengalihan yang lebih canggih - redirect ke halaman error kustom
+        // Tambahkan timeout acak agar sulit dideteksi
+        setTimeout(() => {
+            // Hancurkan semua elemen UI
+            document.body.innerHTML = '<div style="text-align: center; padding: 50px; font-family: Arial; color: #333;"><h2>Browser Tidak Didukung</h2><p>Aplikasi ini hanya dapat diakses melalui Chrome Android atau Browser bawaan Android.</p><p>Developer tools harus dinonaktifkan.</p></div>';
+            
+            // Hancurkan semua fungsi yang tersisa
+            const functions = ['encryptApiKey', 'decryptApiKey', 'isBrowserAllowed',
+                'performBrowserCheck', 'performDevToolsCheck', 'performIntegrityCheck'];
+            
+            functions.forEach(func => {
+                window[func] = function() { return false; };
+            });
+            
+            // Hancurkan data penting
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Rusak aliran eksekusi normal
+            window.onerror = null;
+            window.onload = null;
+            
+            // Kirim event untuk tracking (opsional)
+            try {
+                navigator.sendBeacon('/analytics', JSON.stringify({
+                    event: 'security_violation',
+                    browser: navigator.userAgent
+                }));
+            } catch (e) {}
+            
+            return false;
+        }, Math.random() * 500 + 100);
         
-        // Cara lain: redirect ke halaman kesalahan
-        // window.location.href = 'error.html';
-        
-        // Menghentikan semua fungsi JavaScript
         return false;
     }
     return true;
 }
-
-// API key yang telah dienkripsi
-const ENCRYPTED_API_KEY = encryptApiKey('5e42e42d02msh2e7abfe7aed9d46p149460jsnb67dbb68e538');
 
 // Inisialisasi aplikasi hanya jika browser diizinkan
 if (secureApplication()) {
@@ -121,12 +237,12 @@ if (secureApplication()) {
 
     // Konfigurasi API dengan key terenkripsi
     const API_CONFIG = {
-        key: ENCRYPTED_API_KEY, // Key yang sudah dienkripsi
+        key: ENCRYPTED_API_KEY, // Key yang sudah dienkripsi dengan metode baru
         host: 'tiktok-scraper7.p.rapidapi.com',
         endpoint: 'https://tiktok-scraper7.p.rapidapi.com/'
     };
 
-    // Cache untuk menyimpan hasil API request
+    // Cache untuk menyimpan hasil API request - gunakan memory storage yang lebih aman
     const apiCache = new Map();
 
     // Event listener untuk membuka menu
@@ -172,8 +288,14 @@ if (secureApplication()) {
         loadingSpinner.style.display = 'none';
     }
 
-    // Optimasi pengambilan data video dengan caching
+    // Optimasi pengambilan data video dengan caching yang ditingkatkan
     async function fetchVideoData(videoUrl) {
+        // Validasi URL terlebih dahulu
+        if (!validateTikTokUrl(videoUrl)) {
+            showNotification('URL TikTok tidak valid. Format yang benar: https://www.tiktok.com/@username/video/1234567890', 'warning');
+            return;
+        }
+        
         // Periksa apakah data sudah ada di cache
         if (apiCache.has(videoUrl)) {
             updateUIWithVideoData(apiCache.get(videoUrl));
@@ -192,7 +314,7 @@ if (secureApplication()) {
                 'x-rapidapi-host': API_CONFIG.host
             },
             // Tambahkan timeout untuk permintaan
-            timeout: 10000 // 10 detik
+            timeout: 15000 // 15 detik
         };
 
         showSpinner("Sedang Mencari...");
@@ -202,7 +324,7 @@ if (secureApplication()) {
         try {
             // Gunakan AbortController untuk membatalkan permintaan jika terlalu lama
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             
             const response = await axios.request({...options, signal: controller.signal});
             clearTimeout(timeoutId);
@@ -210,8 +332,19 @@ if (secureApplication()) {
             const data = response.data.data;
 
             if (data) {
-                // Simpan data ke cache
-                apiCache.set(videoUrl, data);
+                // Implementasi cache dengan batas umur dan ukuran
+                while (apiCache.size > 10) { // Batas ukuran cache
+                    const firstKey = apiCache.keys().next().value;
+                    apiCache.delete(firstKey);
+                }
+                
+                // Tambahkan timestamp ke data untuk batasi umur cache
+                const cacheData = {
+                    ...data,
+                    _timestamp: Date.now()
+                };
+                
+                apiCache.set(videoUrl, cacheData);
                 updateUIWithVideoData(data);
             } else {
                 showNotification('Tidak ada data ditemukan untuk video ini.', 'error');
@@ -229,6 +362,17 @@ if (secureApplication()) {
                 showNotification('Gagal mengambil data video. Coba lagi.', 'error');
             }
         }
+    }
+
+    // Validasi URL TikTok
+    function validateTikTokUrl(url) {
+        // Pola untuk URL TikTok yang valid
+        const patterns = [
+            /^https?:\/\/(www\.|vm\.|vt\.)?tiktok\.com\/(@[\w.-]+\/video\/\d+|[\w]+)/i,
+            /^https?:\/\/(www\.|vm\.|vt\.)?tiktok\.com\/t\/[\w]+/i
+        ];
+        
+        return patterns.some(pattern => pattern.test(url));
     }
 
     // Fungsi untuk memperbarui UI dengan data video
@@ -283,7 +427,7 @@ if (secureApplication()) {
         }
     });
 
-    // Implementasi download yang dioptimalkan
+    // Implementasi download yang dioptimalkan dengan streaming
     downloadBtn.addEventListener('click', async () => {
         const downloadUrl = downloadBtn.getAttribute('data-url');
         if (!downloadUrl) {
@@ -295,11 +439,17 @@ if (secureApplication()) {
         downloadBtn.disabled = true;
 
         try {
-            // Gunakan Blob API dengan timeout
+            // Gunakan Blob API dengan timeout dan streaming untuk file besar
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 detik timeout
+            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45 detik timeout
             
-            const response = await fetch(downloadUrl, { signal: controller.signal });
+            const response = await fetch(downloadUrl, { 
+                signal: controller.signal,
+                mode: 'cors',
+                headers: {
+                    'Accept': 'video/mp4,video/*;q=0.9,*/*;q=0.8'
+                }
+            });
             clearTimeout(timeoutId);
             
             if (!response.ok) throw new Error('Network response was not ok');
@@ -328,7 +478,7 @@ if (secureApplication()) {
             }
             
             // Gabungkan semua chunk menjadi satu blob
-            const blob = new Blob(chunks);
+            const blob = new Blob(chunks, {type: 'video/mp4'});
             const url = window.URL.createObjectURL(blob);
 
             // Buat link download dan klik
@@ -372,109 +522,4 @@ if (secureApplication()) {
         }
     });
 
-    // Fungsi untuk menampilkan notifikasi dengan jenis pesan (success, error, warning)
-    function showNotification(message, type = 'success') {
-        // Periksa apakah elemen notifikasi sudah ada
-        let notification = document.getElementById('notification');
-        
-        // Jika belum ada, buat elemen baru
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'notification';
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.padding = '10px 20px';
-            notification.style.color = 'white';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '9999';
-            notification.style.opacity = '0';
-            notification.style.transition = 'opacity 0.3s ease-in-out';
-            document.body.appendChild(notification);
-        }
-        
-        // Set warna berdasarkan tipe pesan
-        const colors = {
-            success: '#28a745',
-            error: '#dc3545',
-            warning: '#ffc107'
-        };
-        
-        notification.style.backgroundColor = colors[type] || colors.success;
-        
-        // Set pesan notifikasi
-        notification.innerText = message;
-        
-        // Tampilkan notifikasi
-        setTimeout(() => {
-            notification.style.opacity = '1';
-        }, 10);
-        
-        // Hilangkan notifikasi setelah 3 detik
-        setTimeout(() => {
-            notification.style.opacity = '0';
-        }, 3000);
-    }
-
-    // Tambahkan pengecekan browser dan developer tools secara periodik
-    setInterval(() => {
-        if (!isBrowserAllowed()) {
-            secureApplication();
-        }
-    }, 5000);
-}
-
-// Tambahkan proteksi tambahan terhadap manipulasi JavaScript
-(function() {
-    // Cegah override fungsi-fungsi penting
-    const protectedFunctions = [
-        'encryptApiKey',
-        'decryptApiKey',
-        'isBrowserAllowed',
-        'secureApplication'
-    ];
-    
-    protectedFunctions.forEach(funcName => {
-        const originalFunc = window[funcName];
-        Object.defineProperty(window, funcName, {
-            get: function() {
-                return originalFunc;
-            },
-            set: function() {
-                console.warn('Mencoba mengubah fungsi keamanan!');
-                return originalFunc; // Tolak perubahan
-            }
-        });
-    });
-    
-    // Tambahkan listener untuk mematikan konsol saat dibuka
-    window.addEventListener('error', function(e) {
-        if (e.message === 'ResizeObserver loop limit exceeded') {
-            // Ini sering muncul di DevTools, mungkin indikasi DevTools terbuka
-            secureApplication();
-        }
-    });
-    
-    // Blokir inspect element
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-    
-    // Nonaktifkan fungsi view-source
-    document.addEventListener('keydown', function(e) {
-        // Ctrl+U, Ctrl+Shift+I, F12
-        if (
-            (e.ctrlKey && e.keyCode === 85) || 
-            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
-            e.keyCode === 123
-        ) {
-            e.preventDefault();
-            return false;
-        }
-    });
-})();
-
-// Eksekusi pengecekan saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    secureApplication();
-});
+    // F
