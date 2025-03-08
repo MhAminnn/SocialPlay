@@ -1,7 +1,5 @@
 // Fungsi untuk mengenkripsi API key
 function encryptApiKey(key) {
-    // Simple obfuscation - ini hanya contoh dasar
-    // Dalam produksi, gunakan metode yang lebih kuat
     return btoa(key.split('').reverse().join(''));
 }
 
@@ -11,470 +9,306 @@ function decryptApiKey(encryptedKey) {
     return decoded.split('').reverse().join('');
 }
 
-// Cek browser untuk memblokir akses dari browser yang tidak diinginkan
-function isBrowserAllowed() {
-    const userAgent = navigator.userAgent.toLowerCase();
-    
-    // Deteksi developer tools
-    const devToolsOpen = window.outerHeight - window.innerHeight > 200 || 
-                         window.outerWidth - window.innerWidth > 200;
-    
-    // Deteksi apakah ada extension browser
-    const hasExtensions = !!window.chrome && !!window.chrome.runtime;
-    
-    // Deteksi browser mobile yang diizinkan (Chrome Android atau browser bawaan)
-    const isAllowedMobile = (
-        /android/.test(userAgent) && (
-            /chrome/.test(userAgent) ||       // Chrome Android
-            /samsung browser/.test(userAgent) || // Samsung browser
-            /android browser/.test(userAgent)  // Browser bawaan Android
-        )
-    );
-    
-    // Deteksi browser yang tidak diizinkan
-    const isBlockedBrowser = (
-        /kiwi/.test(userAgent) || 
-        /mixes/.test(userAgent) ||
-        /firefox/.test(userAgent) ||
-        /opera/.test(userAgent) ||
-        /edge/.test(userAgent) ||
-        /brave/.test(userAgent)
-    );
-    
-    // Deteksi penggunaan DevTools
-    let isDevToolsOpen = false;
-    
-    // Metode 1: Deteksi dengan console.log
-    const consoleCheck = () => {
-        const startTime = new Date();
-        console.log('Checking for devtools...');
-        console.clear();
-        const endTime = new Date();
-        
-        // Jika membutuhkan waktu terlalu lama, kemungkinan DevTools terbuka
-        return (endTime - startTime) > 100;
-    };
-    
-    // Metode 2: Deteksi dengan ukuran window
-    const sizeCheck = () => {
-        return window.outerHeight - window.innerHeight > 200 || 
-               window.outerWidth - window.innerWidth > 200;
-    };
-    
-    // Metode 3: Deteksi dengan debugger statement
-    const debuggerCheck = () => {
-        let counter = 0;
-        const start = new Date().getTime();
-        
-        function debuggerTrap() {
-            counter++;
-            // debugger; // Uncomment ini untuk deteksi lebih agresif
-            
-            if (counter < 2) {
-                debuggerTrap();
-            }
-        }
-        
-        debuggerTrap();
-        
-        return (new Date().getTime() - start) > 100;
-    };
-    
-    isDevToolsOpen = consoleCheck() || sizeCheck() || debuggerCheck();
-    
-    // Return true jika browser diizinkan dan tidak ada developer tools
-    return isAllowedMobile && !isDevToolsOpen && !isBlockedBrowser && !hasExtensions;
-}
+// API keys yang dienkripsi
+const TIKTOK_API_KEY = encryptApiKey('5e42e42d02msh2e7abfe7aed9d46p149460jsnb67dbb68e538');
+const INSTAGRAM_API_KEY = encryptApiKey('8a9451b54bmsh997e8b63578a8c7p1cdbcejsnd3dcbee782ed');
 
-// Fungsi untuk mengacak kode jika browser tidak diizinkan
-function secureApplication() {
-    if (!isBrowserAllowed()) {
-        // Browser tidak diizinkan, nonaktifkan aplikasi
-        document.body.innerHTML = '<div style="text-align: center; padding: 50px; color: red;"><h2>Akses Ditolak</h2><p>Aplikasi hanya dapat diakses melalui browser bawaan Android atau Chrome Android.</p></div>';
-        
-        // Cara lain: redirect ke halaman kesalahan
-        // window.location.href = 'error.html';
-        
-        // Menghentikan semua fungsi JavaScript
-        return false;
-    }
-    return true;
-}
-
-// API key yang telah dienkripsi
-const ENCRYPTED_API_KEY = encryptApiKey('5e42e42d02msh2e7abfe7aed9d46p149460jsnb67dbb68e538');
-
-// Inisialisasi aplikasi hanya jika browser diizinkan
-if (secureApplication()) {
-    // Seleksi elemen-elemen yang diperlukan
-    const menuToggle = document.getElementById('menuToggle');
-    const fullscreenMenu = document.getElementById('fullscreenMenu');
-    const closeMenu = document.getElementById('closeMenu');
-    const fetchBtn = document.getElementById('fetchBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const urlInput = document.getElementById('urlInput');
-    const videoPreview = document.getElementById('videoPreview');
-    const previewImage = document.getElementById('previewImage');
-    const authorName = document.getElementById('authorName');
-    const likeCount = document.getElementById('likeCount');
-    const commentCount = document.getElementById('commentCount');
-
-    // Konfigurasi API dengan key terenkripsi
-    const API_CONFIG = {
-        key: ENCRYPTED_API_KEY, // Key yang sudah dienkripsi
+// Konfigurasi API
+const API_CONFIG = Object.freeze({
+    tiktok: {
+        key: TIKTOK_API_KEY,
         host: 'tiktok-scraper7.p.rapidapi.com',
         endpoint: 'https://tiktok-scraper7.p.rapidapi.com/'
+    },
+    instagram: {
+        key: INSTAGRAM_API_KEY,
+        host: 'instagram-scraper-api2.p.rapidapi.com',
+        endpoint: 'https://instagram-scraper-api2.p.rapidapi.com/v1/post_info'
+    }
+});
+
+// Cache dengan batas ukuran untuk mencegah memory leak
+const apiCache = new Map();
+const MAX_CACHE_SIZE = 100;
+
+// Debounce utility untuk membatasi frekuensi pemanggilan fungsi
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Fungsi untuk mendeteksi tipe URL dengan regex yang lebih cepat
+function detectUrlType(url) {
+    const urlLower = url.toLowerCase();
+    return /tiktok\.com/.test(urlLower) ? 'tiktok' :
+           /instagram\.com/.test(urlLower) ? 'instagram' : null;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Inisialisasi elemen UI dengan caching DOM
+    const elements = {
+        menuToggle: document.getElementById('menuToggle'),
+        fullscreenMenu: document.getElementById('fullscreenMenu'),
+        closeMenu: document.getElementById('closeMenu'),
+        fetchBtn: document.getElementById('fetchBtn'),
+        urlInput: document.getElementById('urlInput'),
+        videoPreview: document.getElementById('videoPreview'),
+        downloadBtn: document.getElementById('downloadBtn'),
+        previewImage: document.getElementById('previewImage'),
+        authorName: document.getElementById('authorName'),
+        likeCount: document.getElementById('likeCount'),
+        commentCount: document.getElementById('commentCount'),
+        loadingSpinner: document.getElementById('loadingSpinner'),
+        loadingText: document.getElementById('loadingText'),
+        notificationBox: document.getElementById('notificationBox')
     };
 
-    // Cache untuk menyimpan hasil API request
-    const apiCache = new Map();
+    // Fungsi untuk menutup menu fullscreen
+    const closeFullscreenMenu = () => {
+        elements.fullscreenMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    };
 
-    // Event listener untuk membuka menu
-    menuToggle.addEventListener('click', () => {
-        fullscreenMenu.classList.add('active');
+    // Event listener untuk menu dengan performa lebih baik
+    elements.menuToggle?.addEventListener('click', () => {
+        elements.fullscreenMenu.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
 
-    // Event listener untuk menutup menu
-    closeMenu.addEventListener('click', closeFullscreenMenu);
+    elements.closeMenu?.addEventListener('click', closeFullscreenMenu);
 
-    // Tutup menu saat mengklik di luar menu
     document.addEventListener('click', (e) => {
-        if (!fullscreenMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+        if (!elements.fullscreenMenu.contains(e.target) && !elements.menuToggle.contains(e.target)) {
             closeFullscreenMenu();
         }
-    });
+    }, { passive: true });
 
-    // Tambahkan event listener untuk menutup menu saat item menu diklik
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-        item.addEventListener('click', closeFullscreenMenu);
-    });
+    // Format angka dengan lookup table untuk efisiensi
+    const formatNumber = (() => {
+        const suffixes = ['K', 'M'];
+        return (num) => {
+            if (!num) return '0';
+            num = Number(num);
+            if (num < 1000) return num.toString();
+            const exp = Math.min(Math.floor(Math.log10(num) / 3), 2);
+            return (num / Math.pow(1000, exp)).toFixed(1) + suffixes[exp - 1];
+        };
+    })();
 
-    // Fungsi untuk menutup menu fullscreen
-    function closeFullscreenMenu() {
-        fullscreenMenu.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Fungsi untuk menampilkan loading spinner dengan pesan kustom
-    function showSpinner(message) {
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const loadingText = document.getElementById('loadingText');
-        
-        loadingText.textContent = message;
-        loadingSpinner.style.display = 'flex';
-    }
+    // Fungsi untuk menampilkan loading spinner
+    const showSpinner = (message) => {
+        elements.loadingText.innerHTML = message; // Ubah ke innerHTML untuk mendukung warna
+        elements.loadingSpinner.style.display = 'flex';
+    };
 
     // Fungsi untuk menyembunyikan loading spinner
-    function hideSpinner() {
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        loadingSpinner.style.display = 'none';
-    }
+    const hideSpinner = () => {
+        elements.loadingSpinner.style.display = 'none';
+    };
 
-    // Optimasi pengambilan data video dengan caching
-    async function fetchVideoData(videoUrl) {
-        // Periksa apakah data sudah ada di cache
-        if (apiCache.has(videoUrl)) {
-            updateUIWithVideoData(apiCache.get(videoUrl));
+    // Fungsi untuk menampilkan notifikasi dengan pooling
+    const showNotification = (() => {
+        let timeoutId;
+        return (message, type = 'success') => {
+            clearTimeout(timeoutId);
+            elements.notificationBox.className = `notification ${type}`;
+            elements.notificationBox.textContent = message;
+            elements.notificationBox.style.display = 'block';
+            timeoutId = setTimeout(() => {
+                elements.notificationBox.style.display = 'none';
+            }, 3000);
+        };
+    })();
+
+    // Fungsi untuk memperbarui UI dengan data media
+    const updateUIWithMediaData = (data, type) => {
+        const downloadUrl = type === 'tiktok' 
+            ? (data.hdplay || data.play) 
+            : (data.is_video ? data.video_url : data.display_url);
+
+        const previewImageUrl = type === 'tiktok' 
+            ? data.cover 
+            : (data.is_video ? (data.thumbnail_url || data.video_preview || data.display_url) 
+              : (data.display_url || data.first_frame_url || data.thumbnail_url));
+
+        elements.authorName.textContent = type === 'tiktok' 
+            ? (data.author?.nickname || 'Unknown') 
+            : (data.user?.username || 'Unknown');
+
+        elements.likeCount.textContent = formatNumber(type === 'tiktok' 
+            ? data.digg_count 
+            : data.metrics?.like_count);
+
+        elements.commentCount.textContent = formatNumber(type === 'tiktok' 
+            ? data.comment_count 
+            : data.metrics?.comment_count);
+
+        elements.previewImage.src = previewImageUrl;
+        elements.videoPreview.style.display = 'block';
+        elements.downloadBtn.style.display = 'block';
+        elements.downloadBtn.setAttribute('data-url', downloadUrl);
+        elements.downloadBtn.disabled = !downloadUrl;
+    };
+
+    // Fungsi utama untuk mengambil data media dengan retry mechanism
+    const fetchMediaData = async (url) => {
+        const urlType = detectUrlType(url);
+        if (!urlType) {
+            showNotification('URL tidak valid. Masukkan URL TikTok atau Instagram yang benar.', 'warning');
             return;
         }
 
-        const options = {
-            method: 'GET',
-            url: API_CONFIG.endpoint,
-            params: {
-                url: videoUrl,
-                hd: '1'
-            },
-            headers: {
-                'x-rapidapi-key': decryptApiKey(API_CONFIG.key), // Dekripsi key saat digunakan
-                'x-rapidapi-host': API_CONFIG.host
-            },
-            // Tambahkan timeout untuk permintaan
-            timeout: 10000 // 10 detik
-        };
-
-        showSpinner("Sedang Mencari...");
-        videoPreview.style.display = 'none';
-        downloadBtn.style.display = 'none';
+        if (apiCache.has(url)) {
+            updateUIWithMediaData(apiCache.get(url), urlType);
+            return;
+        }
 
         try {
-            // Gunakan AbortController untuk membatalkan permintaan jika terlalu lama
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
-            
-            const response = await axios.request({...options, signal: controller.signal});
-            clearTimeout(timeoutId);
-            
-            const data = response.data.data;
+            showSpinner("Sedang Mencari...");
+            elements.videoPreview.style.display = 'none';
+            elements.downloadBtn.style.display = 'none';
+
+            const apiConfig = API_CONFIG[urlType];
+            const options = {
+                method: 'GET',
+                url: apiConfig.endpoint,
+                params: urlType === 'tiktok' 
+                    ? { url, hd: '1' } 
+                    : { code_or_id_or_url: url },
+                headers: {
+                    'x-rapidapi-key': decryptApiKey(apiConfig.key),
+                    'x-rapidapi-host': apiConfig.host
+                },
+                timeout: 15000,
+                cache: 'no-store'
+            };
+
+            const response = await axios.request(options);
+            const data = urlType === 'tiktok' ? response.data.data : response.data.data;
 
             if (data) {
-                // Simpan data ke cache
-                apiCache.set(videoUrl, data);
-                updateUIWithVideoData(data);
+                if (apiCache.size >= MAX_CACHE_SIZE) apiCache.clear();
+                apiCache.set(url, data);
+                updateUIWithMediaData(data, urlType);
             } else {
-                showNotification('Tidak ada data ditemukan untuk video ini.', 'error');
-                hideSpinner();
+                showNotification('Tidak ada data ditemukan.', 'error');
             }
         } catch (error) {
             console.error('Fetch error:', error);
+            const errorMessage = error.response?.status === 429 
+                ? 'Terlalu banyak permintaan. Silakan coba lagi nanti.' 
+                : 'Gagal mengambil data. Coba lagi.';
+            showNotification(errorMessage, 'error');
+        } finally {
             hideSpinner();
-            
-            if (error.code === 'ECONNABORTED' || error.name === 'AbortError') {
-                showNotification('Permintaan timeout. Server terlalu lambat merespons.', 'error');
-            } else if (error.response && error.response.status === 429) {
-                showNotification('Terlalu banyak permintaan. Silakan coba lagi nanti.', 'error');
-            } else {
-                showNotification('Gagal mengambil data video. Coba lagi.', 'error');
-            }
         }
-    }
+    };
 
-    // Fungsi untuk memperbarui UI dengan data video
-    function updateUIWithVideoData(data) {
-        // Update the UI with the fetched data
-        authorName.innerText = data.author?.nickname || 'Unknown';
-        likeCount.innerText = formatNumber(data.digg_count) || '0';
-        commentCount.innerText = formatNumber(data.comment_count) || '0';
-        
-        if (data.cover) {
-            previewImage.src = data.cover;
-            previewImage.alt = data.author?.nickname ? `${data.author.nickname}'s video` : 'TikTok video';
-        }
-
-        hideSpinner();
-        videoPreview.style.display = 'block';
-        downloadBtn.style.display = 'block';
-
-        // Store video download URL for later use - prioritas HD video
-        const videoUrl = data.hdplay || data.play;
-        downloadBtn.setAttribute('data-url', videoUrl);
-        downloadBtn.disabled = !videoUrl;
-    }
-
-    // Format angka untuk ditampilkan (contoh: 1,000,000 -> 1M)
-    function formatNumber(num) {
-        if (!num) return '0';
-        
-        num = Number(num);
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + 'M';
-        } else if (num >= 1000) {
-            return (num / 1000).toFixed(1) + 'K';
-        }
-        return num.toString();
-    }
-
-    // Add event listeners
-    fetchBtn.addEventListener('click', () => {
-        const videoUrl = urlInput.value.trim();
-        if (videoUrl) {
-            fetchVideoData(videoUrl);
-        } else {
-            showNotification('Masukkan URL video TikTok yang valid.', 'warning');
-        }
-    });
-
-    // Enter key pada input URL
-    urlInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            fetchBtn.click();
-        }
-    });
-
-    // Implementasi download yang dioptimalkan
-    downloadBtn.addEventListener('click', async () => {
-        const downloadUrl = downloadBtn.getAttribute('data-url');
+    // Fungsi download dengan animasi loading dinamis dan refresh otomatis
+    const downloadMedia = async (downloadUrl) => {
         if (!downloadUrl) {
             showNotification('URL download tidak ditemukan.', 'error');
             return;
         }
 
-        showSpinner("Sedang Mengunduh, Harap Bersabar...");
-        downloadBtn.disabled = true;
+        showSpinner(`Sedang Mengunduh.. <span style="color: greenyellow;">0%</span>`);
+        elements.downloadBtn.disabled = true;
 
         try {
-            // Gunakan Blob API dengan timeout
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 detik timeout
-            
-            const response = await fetch(downloadUrl, { signal: controller.signal });
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            const response = await fetch(downloadUrl, { 
+                signal: controller.signal,
+                cache: 'no-store'
+            });
             clearTimeout(timeoutId);
-            
+
             if (!response.ok) throw new Error('Network response was not ok');
 
-            // Progress monitoring untuk file besar
             const contentLength = response.headers.get('content-length');
-            let loaded = 0;
-            
-            // Create reader from response body
             const reader = response.body.getReader();
             const chunks = [];
-            
-            // Read data chunks
+            let loaded = 0;
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
                 chunks.push(value);
                 loaded += value.length;
-                
-                // Update loading text jika content-length tersedia
                 if (contentLength) {
-                    const percentComplete = Math.round((loaded / contentLength) * 100);
-                    document.getElementById('loadingText').textContent = 
-                        `Mengunduh... ${percentComplete}%`;
+                    const percentage = Math.round((loaded / contentLength) * 100);
+                    if (percentage < 30) {
+                        elements.loadingText.innerHTML = `Sedang Mengunduh.. <span style="color: greenyellow;">${percentage}%</span>`;
+                    } else if (percentage >= 30 && percentage < 80) {
+                        elements.loadingText.innerHTML = `Mohon sabar kak..🥹  <span style="color: greenyellow;">${percentage}%</span>`;
+                    } else if (percentage >= 80) {
+                        elements.loadingText.innerHTML = `Sedikit lagi kak.. 😁 <span style="color: greenyellow;">${percentage}%</span>`;
+                    }
                 }
             }
-            
-            // Gabungkan semua chunk menjadi satu blob
+
             const blob = new Blob(chunks);
             const url = window.URL.createObjectURL(blob);
-
-            // Buat link download dan klik
             const link = document.createElement('a');
             link.href = url;
-            
-            // Dapatkan nama file dari URL jika mungkin
-            let filename = 'tiktok-video.mp4';
+
+            let filename = 'social-media-video.mp4';
             try {
-                const originalUrl = urlInput.value.trim();
-                const urlMatch = originalUrl.match(/\/([\w-]+)(?:\?|$)/);
-                if (urlMatch && urlMatch[1]) {
-                    filename = `tiktok-${urlMatch[1]}.mp4`;
-                }
+                const urlMatch = elements.urlInput.value.trim().match(/\/([\w-]+)(?:\?|$)/);
+                if (urlMatch?.[1]) filename = `social-${urlMatch[1]}.mp4`;
             } catch (e) {
                 console.warn('Could not parse filename from URL', e);
             }
-            
+
             link.download = filename;
             document.body.appendChild(link);
             link.click();
-            
-            // Cleanup
+
             setTimeout(() => {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(link);
             }, 100);
 
-            // Show notification
-            showNotification('Download berhasil!', 'success');
+            showNotification('Download berhasil! Halaman akan direfresh.', 'success');
+            // Refresh otomatis setelah 1 detik
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error('Download error:', error);
-            if (error.name === 'AbortError') {
-                showNotification('Download timeout. Koneksi terlalu lambat.', 'error');
-            } else {
-                showNotification('Gagal mengunduh video. Coba lagi.', 'error');
-            }
+            const errorMessage = error.name === 'AbortError' 
+                ? 'Download timeout. Koneksi terlalu lambat.' 
+                : 'Gagal mengunduh video. Coba lagi.';
+            showNotification(errorMessage, 'error');
         } finally {
             hideSpinner();
-            downloadBtn.disabled = false;
+            elements.downloadBtn.disabled = false;
         }
-    });
+    };
 
-    // Fungsi untuk menampilkan notifikasi dengan jenis pesan (success, error, warning)
-    function showNotification(message, type = 'success') {
-        // Periksa apakah elemen notifikasi sudah ada
-        let notification = document.getElementById('notification');
-        
-        // Jika belum ada, buat elemen baru
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'notification';
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.padding = '10px 20px';
-            notification.style.color = 'white';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '9999';
-            notification.style.opacity = '0';
-            notification.style.transition = 'opacity 0.3s ease-in-out';
-            document.body.appendChild(notification);
-        }
-        
-        // Set warna berdasarkan tipe pesan
-        const colors = {
-            success: '#28a745',
-            error: '#dc3545',
-            warning: '#ffc107'
-        };
-        
-        notification.style.backgroundColor = colors[type] || colors.success;
-        
-        // Set pesan notifikasi
-        notification.innerText = message;
-        
-        // Tampilkan notifikasi
-        setTimeout(() => {
-            notification.style.opacity = '1';
-        }, 10);
-        
-        // Hilangkan notifikasi setelah 3 detik
-        setTimeout(() => {
-            notification.style.opacity = '0';
-        }, 3000);
-    }
+    // Event listener dengan debounce
+    const debouncedFetch = debounce(() => {
+        const url = elements.urlInput.value.trim();
+        if (url) fetchMediaData(url);
+        else showNotification('Masukkan URL video yang valid.', 'warning');
+    }, 300);
 
-    // Tambahkan pengecekan browser dan developer tools secara periodik
-    setInterval(() => {
-        if (!isBrowserAllowed()) {
-            secureApplication();
-        }
-    }, 5000);
-}
+    elements.fetchBtn?.addEventListener('click', debouncedFetch);
+    elements.urlInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') debouncedFetch();
+    }, { passive: true });
 
-// Tambahkan proteksi tambahan terhadap manipulasi JavaScript
-(function() {
-    // Cegah override fungsi-fungsi penting
-    const protectedFunctions = [
-        'encryptApiKey',
-        'decryptApiKey',
-        'isBrowserAllowed',
-        'secureApplication'
-    ];
-    
-    protectedFunctions.forEach(funcName => {
-        const originalFunc = window[funcName];
-        Object.defineProperty(window, funcName, {
-            get: function() {
-                return originalFunc;
-            },
-            set: function() {
-                console.warn('Mencoba mengubah fungsi keamanan!');
-                return originalFunc; // Tolak perubahan
-            }
-        });
-    });
-    
-    // Tambahkan listener untuk mematikan konsol saat dibuka
-    window.addEventListener('error', function(e) {
-        if (e.message === 'ResizeObserver loop limit exceeded') {
-            // Ini sering muncul di DevTools, mungkin indikasi DevTools terbuka
-            secureApplication();
-        }
-    });
-    
-    // Blokir inspect element
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-    
-    // Nonaktifkan fungsi view-source
-    document.addEventListener('keydown', function(e) {
-        // Ctrl+U, Ctrl+Shift+I, F12
-        if (
-            (e.ctrlKey && e.keyCode === 85) || 
-            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
-            e.keyCode === 123
-        ) {
-            e.preventDefault();
-            return false;
-        }
-    });
-})();
+    elements.downloadBtn?.addEventListener('click', () => {
+        downloadMedia(elements.downloadBtn.getAttribute('data-url'));
+    }, { passive: true });
 
-// Eksekusi pengecekan saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    secureApplication();
+    // Preload gambar default untuk preview
+    elements.previewImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 });
