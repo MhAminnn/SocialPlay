@@ -472,4 +472,32 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchMediaData(url);
     });
 
-    elements.urlInput?.addEventListener('keypress', e =>
+    elements.urlInput?.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            elements.fetchBtn.click();
+        }
+    });
+
+    elements.downloadBtn?.addEventListener('click', () => {
+        const url = elements.downloadBtn.getAttribute('data-url');
+        const isVideo = elements.downloadBtn.textContent.includes('Video');
+        downloadMedia(url, isVideo ? 'video' : 'image');
+    });
+
+    const processClipboard = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            const urlRegex = /(https?:\/\/(?:www\.)?(?:tiktok\.com|instagram\.com)\/[^\s]+)/i;
+            const match = text.match(urlRegex);
+            
+            if (match && match[1]) {
+                elements.urlInput.value = match[1];
+                showNotification('URL dari clipboard ditemukan!', 'success');
+            }
+        } catch (error) {
+            console.error('Clipboard error:', error);
+        }
+    };
+
+    processClipboard();
+});
