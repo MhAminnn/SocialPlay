@@ -1,19 +1,14 @@
-// Fungsi untuk mengenkripsi API key
 function encryptApiKey(key) {
     return btoa(key.split('').reverse().join(''));
 }
 
-// Fungsi untuk mendekripsi API key
 function decryptApiKey(encryptedKey) {
-    const decoded = atob(encryptedKey);
-    return decoded.split('').reverse().join('');
+    return atob(encryptedKey).split('').reverse().join('');
 }
 
-// API keys yang dienkripsi
 const TIKTOK_API_KEY = encryptApiKey('5e42e42d02msh2e7abfe7aed9d46p149460jsnb67dbb68e538');
 const INSTAGRAM_API_KEY = encryptApiKey('8a9451b54bmsh997e8b63578a8c7p1cdbcejsnd3dcbee782ed');
 
-// Konfigurasi API
 const API_CONFIG = Object.freeze({
     tiktok: {
         key: TIKTOK_API_KEY,
@@ -27,32 +22,32 @@ const API_CONFIG = Object.freeze({
     }
 });
 
-// Cache dengan batas ukuran untuk mencegah memory leak
-const apiCache = new Map();
+const apiCache = new WeakMap();
 const MAX_CACHE_SIZE = 100;
 
-// Debounce utility untuk membatasi frekuensi pemanggilan fungsi
 function debounce(func, wait) {
     let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+    return (...args) => {
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(() => func(...args), wait);
     };
 }
 
-// Fungsi untuk mendeteksi tipe URL dengan regex yang lebih cepat
-function detectUrlType(url) {
+const detectUrlType = url => {
     const urlLower = url.toLowerCase();
-    return /tiktok\.com/.test(urlLower) ? 'tiktok' :
-           /instagram\.com/.test(urlLower) ? 'instagram' : null;
-}
+    return urlLower.includes('tiktok.com') ? 'tiktok' : 
+           urlLower.includes('instagram.com') ? 'instagram' : null;
+};
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Inisialisasi elemen UI dengan caching DOM
+const formatNumber = num => {
+    if (!num) return '0';
+    num = Number(num);
+    if (num < 1000) return `${num}`;
+    const exp = Math.min(Math.floor(Math.log10(num) / 3), 2);
+    return `${(num / (1000 ** exp)).toFixed(1)}${['K', 'M'][exp - 1]}`;
+};
+
+document.addEventListener('DOMContentLoaded', () => {
     const elements = {
         menuToggle: document.getElementById('menuToggle'),
         fullscreenMenu: document.getElementById('fullscreenMenu'),
@@ -61,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         urlInput: document.getElementById('urlInput'),
         videoPreview: document.getElementById('videoPreview'),
         downloadBtn: document.getElementById('downloadBtn'),
-        previewImage: document.getElementById('previewImage'),
+        mediaPreview: document.getElementById('mediaPreview'), // Gantikan previewImage dan carouselPreview
         authorName: document.getElementById('authorName'),
         likeCount: document.getElementById('likeCount'),
         commentCount: document.getElementById('commentCount'),
@@ -70,108 +65,302 @@ document.addEventListener('DOMContentLoaded', function() {
         notificationBox: document.getElementById('notificationBox')
     };
 
-    // Fungsi untuk menutup menu fullscreen
-    const closeFullscreenMenu = () => {
-        elements.fullscreenMenu.classList.remove('active');
-        document.body.style.overflow = '';
+    // Animasi scrolling dinamis
+    const scrollElements = document.querySelectorAll('[data-scroll]');
+    
+    function handleScroll() {
+        const windowHeight = window.innerHeight;
+        scrollElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            const elementTop = rect.top;
+            const elementBottom = rect.bottom;
+
+            if (elementTop < windowHeight * 0.8 && elementBottom > windowHeight * 0.2) {
+                el.classList.add('in-view');
+            } else {
+                el.classList.remove('in-view');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', debounce(handleScroll, 10));
+    handleScroll();
+
+    const toggleMenu = (show) => {
+        const menu = elements.fullscreenMenu;
+        const start = performance.now();
+        const duration = 300;
+        const initialBottom = show ? -100 : 0;
+        const targetBottom = show ? 0 : -100;
+
+        const animate = (time) => {
+            const progress = Math.min((time - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 4);
+            menu.style.bottom = `${initialBottom + (targetBottom - initialBottom) * ease}%`;
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                if (!show) menu.classList.remove('active');
+                document.body.style.overflow = show ? 'hidden' : '';
+            }
+        };
+
+        if (show) menu.classList.add('active');
+        requestAnimationFrame(animate);
     };
 
-    // Event listener untuk menu dengan performa lebih baik
-    elements.menuToggle?.addEventListener('click', () => {
-        elements.fullscreenMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    elements.menuToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu(true);
     });
 
-    elements.closeMenu?.addEventListener('click', closeFullscreenMenu);
+    elements.closeMenu?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu(false);
+    });
 
     document.addEventListener('click', (e) => {
-        if (!elements.fullscreenMenu.contains(e.target) && !elements.menuToggle.contains(e.target)) {
-            closeFullscreenMenu();
+        const target = e.target;
+        if (elements.fullscreenMenu.classList.contains('active') && 
+            !elements.fullscreenMenu.contains(target) && 
+            target !== elements.menuToggle) {
+            toggleMenu(false);
         }
     }, { passive: true });
 
-    // Format angka dengan lookup table untuk efisiensi
-    const formatNumber = (() => {
-        const suffixes = ['K', 'M'];
-        return (num) => {
-            if (!num) return '0';
-            num = Number(num);
-            if (num < 1000) return num.toString();
-            const exp = Math.min(Math.floor(Math.log10(num) / 3), 2);
-            return (num / Math.pow(1000, exp)).toFixed(1) + suffixes[exp - 1];
-        };
-    })();
-
-    // Fungsi untuk menampilkan loading spinner
-    const showSpinner = (message) => {
-        elements.loadingText.innerHTML = message; // Ubah ke innerHTML untuk mendukung warna
+    const showSpinner = message => {
+        elements.loadingText.innerHTML = message;
+        elements.loadingSpinner.style.opacity = '0';
         elements.loadingSpinner.style.display = 'flex';
+        requestAnimationFrame(() => {
+            elements.loadingSpinner.style.transition = 'opacity 0.2s ease';
+            elements.loadingSpinner.style.opacity = '1';
+        });
     };
 
-    // Fungsi untuk menyembunyikan loading spinner
     const hideSpinner = () => {
-        elements.loadingSpinner.style.display = 'none';
+        elements.loadingSpinner.style.opacity = '0';
+        setTimeout(() => elements.loadingSpinner.style.display = 'none', 200);
     };
 
-    // Fungsi untuk menampilkan notifikasi dengan pooling
-    const showNotification = (() => {
-        let timeoutId;
-        return (message, type = 'success') => {
-            clearTimeout(timeoutId);
-            elements.notificationBox.className = `notification ${type}`;
-            elements.notificationBox.textContent = message;
-            elements.notificationBox.style.display = 'block';
-            timeoutId = setTimeout(() => {
-                elements.notificationBox.style.display = 'none';
-            }, 3000);
-        };
-    })();
+    const showNotification = (message, type = 'success') => {
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.padding = '15px';
+        notification.style.borderRadius = '5px';
+        notification.style.color = 'white';
+        notification.style.zIndex = '1000';
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s ease-in-out';
 
-    // Fungsi untuk memperbarui UI dengan data media
+        notification.style.backgroundColor = type === 'error' ? 'red' :
+                                           type === 'warning' ? 'orange' :
+                                           'green';
+
+        notification.innerText = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.opacity = '1';
+        }, 10);
+
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => document.body.removeChild(notification), 500);
+        }, 3000);
+    };
+
     const updateUIWithMediaData = (data, type) => {
-        const downloadUrl = type === 'tiktok' 
-            ? (data.hdplay || data.play) 
-            : (data.is_video ? data.video_url : data.display_url);
+        elements.authorName.textContent = type === 'tiktok' ? (data.author?.nickname || 'Unknown') : 
+                                         (data.user?.username || 'Unknown');
+        elements.likeCount.textContent = formatNumber(type === 'tiktok' ? data.digg_count : data.metrics?.like_count);
+        elements.commentCount.textContent = formatNumber(type === 'tiktok' ? data.comment_count : data.metrics?.comment_count);
 
-        const previewImageUrl = type === 'tiktok' 
-            ? data.cover 
-            : (data.is_video ? (data.thumbnail_url || data.video_preview || data.display_url) 
-              : (data.display_url || data.first_frame_url || data.thumbnail_url));
+        // Bersihkan preview sebelumnya
+        elements.mediaPreview.innerHTML = '';
+        elements.downloadBtn.style.display = 'none';
 
-        elements.authorName.textContent = type === 'tiktok' 
-            ? (data.author?.nickname || 'Unknown') 
-            : (data.user?.username || 'Unknown');
+        if (type === 'tiktok') {
+            if (data.images && Array.isArray(data.images)) {
+                // Gambar slide (carousel)
+                const carousel = document.createElement('div');
+                carousel.className = 'carousel';
+                carousel.innerHTML = `
+                    <div class="carousel-images"></div>
+                    <button class="carousel-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn next"><i class="fas fa-chevron-right"></i></button>
+                `;
+                const carouselImages = carousel.querySelector('.carousel-images');
 
-        elements.likeCount.textContent = formatNumber(type === 'tiktok' 
-            ? data.digg_count 
-            : data.metrics?.like_count);
+                data.images.forEach((imageUrl, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'carousel-item';
+                    item.innerHTML = `
+                        <img src="${imageUrl}" alt="Slide ${index + 1}">
+                        <button class="download-btn" data-url="${imageUrl}">Download Gambar ${index + 1}</button>
+                    `;
+                    carouselImages.appendChild(item);
+                });
 
-        elements.commentCount.textContent = formatNumber(type === 'tiktok' 
-            ? data.comment_count 
-            : data.metrics?.comment_count);
+                elements.mediaPreview.appendChild(carousel);
 
-        elements.previewImage.src = previewImageUrl;
+                let currentSlide = 0;
+                const slides = carouselImages.children;
+                const totalSlides = slides.length;
+
+                const updateCarousel = () => {
+                    carouselImages.style.transform = `translateX(-${currentSlide * 100}%)`;
+                };
+
+                carousel.querySelector('.prev').onclick = () => {
+                    currentSlide = (currentSlide > 0) ? currentSlide - 1 : totalSlides - 1;
+                    updateCarousel();
+                };
+
+                carousel.querySelector('.next').onclick = () => {
+                    currentSlide = (currentSlide < totalSlides - 1) ? currentSlide + 1 : 0;
+                    updateCarousel();
+                };
+            } else {
+                // Video TikTok
+                const videoUrl = data.hdplay || data.play;
+                if (videoUrl) {
+                    const videoElement = document.createElement('video');
+                    videoElement.controls = true;
+                    videoElement.src = videoUrl;
+                    videoElement.style.width = '100%';
+                    videoElement.style.maxWidth = '300px';
+                    videoElement.style.height = '400px';
+                    videoElement.style.objectFit = 'cover';
+                    videoElement.style.borderRadius = '12px';
+                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    videoElement.style.marginBottom = '2rem';
+
+                    elements.mediaPreview.appendChild(videoElement);
+
+                    elements.downloadBtn.setAttribute('data-url', videoUrl);
+                    elements.downloadBtn.textContent = 'Download Video';
+                    elements.downloadBtn.style.display = 'block';
+                    elements.downloadBtn.disabled = false;
+                } else {
+                    showNotification('URL video tidak ditemukan.', 'error');
+                }
+            }
+        } else {
+            if (data.carousel_media && Array.isArray(data.carousel_media)) {
+                // Gambar slide Instagram (carousel)
+                const carousel = document.createElement('div');
+                carousel.className = 'carousel';
+                carousel.innerHTML = `
+                    <div class="carousel-images"></div>
+                    <button class="carousel-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn next"><i class="fas fa-chevron-right"></i></button>
+                `;
+                const carouselImages = carousel.querySelector('.carousel-images');
+
+                data.carousel_media.forEach((item, index) => {
+                    const mediaUrl = item.is_video ? item.video_url : item.display_url;
+                    const previewUrl = item.is_video ? (item.thumbnail_url || item.display_url) : item.display_url;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'carousel-item';
+                    itemElement.innerHTML = `
+                        <img src="${previewUrl}" alt="Slide ${index + 1}">
+                        <button class="download-btn" data-url="${mediaUrl}">Download ${item.is_video ? 'Video' : 'Gambar'} ${index + 1}</button>
+                    `;
+                    carouselImages.appendChild(itemElement);
+                });
+
+                elements.mediaPreview.appendChild(carousel);
+
+                let currentSlide = 0;
+                const slides = carouselImages.children;
+                const totalSlides = slides.length;
+
+                const updateCarousel = () => {
+                    carouselImages.style.transform = `translateX(-${currentSlide * 100}%)`;
+                };
+
+                carousel.querySelector('.prev').onclick = () => {
+                    currentSlide = (currentSlide > 0) ? currentSlide - 1 : totalSlides - 1;
+                    updateCarousel();
+                };
+
+                carousel.querySelector('.next').onclick = () => {
+                    currentSlide = (currentSlide < totalSlides - 1) ? currentSlide + 1 : 0;
+                    updateCarousel();
+                };
+            } else {
+                // Video atau Gambar Tunggal Instagram
+                const isVideo = data.is_video;
+                const mediaUrl = isVideo ? data.video_url : data.display_url;
+                const previewUrl = isVideo ? (data.thumbnail_url || data.display_url) : data.display_url;
+
+                if (isVideo && mediaUrl) {
+                    const videoElement = document.createElement('video');
+                    videoElement.controls = true;
+                    videoElement.src = mediaUrl;
+                    videoElement.style.width = '100%';
+                    videoElement.style.maxWidth = '300px';
+                    videoElement.style.height = '400px';
+                    videoElement.style.objectFit = 'cover';
+                    videoElement.style.borderRadius = '12px';
+                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    videoElement.style.marginBottom = '2rem';
+
+                    elements.mediaPreview.appendChild(videoElement);
+
+                    elements.downloadBtn.setAttribute('data-url', mediaUrl);
+                    elements.downloadBtn.textContent = 'Download Video';
+                    elements.downloadBtn.style.display = 'block';
+                    elements.downloadBtn.disabled = false;
+                } else if (mediaUrl) {
+                    const imageElement = document.createElement('img');
+                    imageElement.src = previewUrl;
+                    imageElement.alt = 'Media Preview';
+                    imageElement.style.width = '100%';
+                    imageElement.style.maxWidth = '300px';
+                    imageElement.style.height = '400px';
+                    imageElement.style.objectFit = 'cover';
+                    imageElement.style.borderRadius = '12px';
+                    imageElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    imageElement.style.marginBottom = '2rem';
+
+                    elements.mediaPreview.appendChild(imageElement);
+
+                    elements.downloadBtn.setAttribute('data-url', mediaUrl);
+                    elements.downloadBtn.textContent = 'Download Gambar';
+                    elements.downloadBtn.style.display = 'block';
+                    elements.downloadBtn.disabled = false;
+                } else {
+                    showNotification('Media tidak ditemukan.', 'error');
+                }
+            }
+        }
+
         elements.videoPreview.style.display = 'block';
-        elements.downloadBtn.style.display = 'block';
-        elements.downloadBtn.setAttribute('data-url', downloadUrl);
-        elements.downloadBtn.disabled = !downloadUrl;
+
+        document.querySelectorAll('.carousel-item .download-btn').forEach(btn => {
+            btn.onclick = () => downloadMedia(btn.getAttribute('data-url'), btn.textContent.includes('Video') ? 'video' : 'image');
+        });
     };
 
-    // Fungsi utama untuk mengambil data media dengan retry mechanism
-    const fetchMediaData = async (url) => {
+    const fetchMediaData = async url => {
         const urlType = detectUrlType(url);
         if (!urlType) {
-            showNotification('URL tidak valid. Masukkan URL TikTok atau Instagram yang benar.', 'warning');
+            showNotification('URL tidak valid.', 'warning');
             return;
         }
 
-        if (apiCache.has(url)) {
-            updateUIWithMediaData(apiCache.get(url), urlType);
+        const cacheKey = { url, type: urlType };
+        if (apiCache.has(cacheKey)) {
+            updateUIWithMediaData(apiCache.get(cacheKey), urlType);
             return;
         }
 
         try {
-            showSpinner("Sedang Mencari...");
+            showSpinner('Sedang Mencari...');
             elements.videoPreview.style.display = 'none';
             elements.downloadBtn.style.display = 'none';
 
@@ -179,9 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const options = {
                 method: 'GET',
                 url: apiConfig.endpoint,
-                params: urlType === 'tiktok' 
-                    ? { url, hd: '1' } 
-                    : { code_or_id_or_url: url },
+                params: urlType === 'tiktok' ? { url, hd: '1' } : { code_or_id_or_url: url },
                 headers: {
                     'x-rapidapi-key': decryptApiKey(apiConfig.key),
                     'x-rapidapi-host': apiConfig.host
@@ -195,24 +382,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (data) {
                 if (apiCache.size >= MAX_CACHE_SIZE) apiCache.clear();
-                apiCache.set(url, data);
+                apiCache.set(cacheKey, data);
                 updateUIWithMediaData(data, urlType);
             } else {
                 showNotification('Tidak ada data ditemukan.', 'error');
             }
         } catch (error) {
             console.error('Fetch error:', error);
-            const errorMessage = error.response?.status === 429 
-                ? 'Terlalu banyak permintaan. Silakan coba lagi nanti.' 
-                : 'Gagal mengambil data. Coba lagi.';
-            showNotification(errorMessage, 'error');
+            showNotification(error.response?.status === 429 ? 
+                'Terlalu banyak permintaan.' : 'Gagal mengambil data.', 'error');
         } finally {
             hideSpinner();
         }
     };
 
-    // Fungsi download dengan animasi loading dinamis dan refresh otomatis
-    const downloadMedia = async (downloadUrl) => {
+    const downloadMedia = async (downloadUrl, mediaType = 'video') => {
         if (!downloadUrl) {
             showNotification('URL download tidak ditemukan.', 'error');
             return;
@@ -224,91 +408,68 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 30000);
-            const response = await fetch(downloadUrl, { 
-                signal: controller.signal,
-                cache: 'no-store'
-            });
+            const response = await fetch(downloadUrl, { signal: controller.signal, cache: 'no-store' });
             clearTimeout(timeoutId);
 
             if (!response.ok) throw new Error('Network response was not ok');
 
-            const contentLength = response.headers.get('content-length');
+            const contentLength = +response.headers.get('content-length');
             const reader = response.body.getReader();
             const chunks = [];
             let loaded = 0;
+
+            const updateProgress = () => {
+                const percentage = contentLength ? Math.round((loaded / contentLength) * 100) : 0;
+                let message;
+                if (percentage < 30) message = `Sedang Mengunduh..`;
+                else if (percentage < 80) message = `Mohon sabar kak`;
+                else message = `Sedikit lagi kak`;
+                elements.loadingText.innerHTML = `${message} <span style="color: greenyellow;">${percentage}%</span>`;
+                if (percentage < 100) requestAnimationFrame(updateProgress);
+            };
+            requestAnimationFrame(updateProgress);
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
                 chunks.push(value);
                 loaded += value.length;
-                if (contentLength) {
-                    const percentage = Math.round((loaded / contentLength) * 100);
-                    if (percentage < 30) {
-                        elements.loadingText.innerHTML = `Sedang Mengunduh.. <span style="color: greenyellow;">${percentage}%</span>`;
-                    } else if (percentage >= 30 && percentage < 80) {
-                        elements.loadingText.innerHTML = `Mohon sabar kak..🥹  <span style="color: greenyellow;">${percentage}%</span>`;
-                    } else if (percentage >= 80) {
-                        elements.loadingText.innerHTML = `Sedikit lagi kak.. 😁 <span style="color: greenyellow;">${percentage}%</span>`;
-                    }
-                }
             }
 
-            const blob = new Blob(chunks);
-            const url = window.URL.createObjectURL(blob);
+            const blob = new Blob(chunks, { type: mediaType === 'video' ? 'video/mp4' : 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
 
-            let filename = 'social-media-video.mp4';
-            try {
-                const urlMatch = elements.urlInput.value.trim().match(/\/([\w-]+)(?:\?|$)/);
-                if (urlMatch?.[1]) filename = `social-${urlMatch[1]}.mp4`;
-            } catch (e) {
-                console.warn('Could not parse filename from URL', e);
-            }
+            const filenameMatch = elements.urlInput.value.match(/\/([\w-]+)(?:\?|$)/);
+            const baseFilename = filenameMatch ? `social-${filenameMatch[1]}` : 'social-media';
+            link.download = `${baseFilename}.${mediaType === 'video' ? 'mp4' : 'jpg'}`;
 
-            link.download = filename;
             document.body.appendChild(link);
             link.click();
-
             setTimeout(() => {
-                window.URL.revokeObjectURL(url);
+                URL.revokeObjectURL(url);
                 document.body.removeChild(link);
             }, 100);
 
-            showNotification('Download berhasil! Halaman akan direfresh.', 'success');
-            // Refresh otomatis setelah 1 detik
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            showNotification(`Unduhan ${mediaType === 'video' ? 'Video' : 'Gambar'} Selesai!`, 'success');
         } catch (error) {
             console.error('Download error:', error);
-            const errorMessage = error.name === 'AbortError' 
-                ? 'Download timeout. Koneksi terlalu lambat.' 
-                : 'Gagal mengunduh video. Coba lagi.';
-            showNotification(errorMessage, 'error');
+            showNotification(error.name === 'AbortError' ? 
+                'Download timeout.' : 'Gagal mengunduh media.', 'error');
         } finally {
             hideSpinner();
             elements.downloadBtn.disabled = false;
         }
     };
 
-    // Event listener dengan debounce
-    const debouncedFetch = debounce(() => {
+    elements.fetchBtn?.addEventListener('click', () => {
         const url = elements.urlInput.value.trim();
-        if (url) fetchMediaData(url);
-        else showNotification('Masukkan URL video yang valid.', 'warning');
-    }, 300);
+        if (!url) {
+            showNotification('Masukkan URL terlebih dahulu.', 'error');
+            return;
+        }
+        fetchMediaData(url);
+    });
 
-    elements.fetchBtn?.addEventListener('click', debouncedFetch);
-    elements.urlInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') debouncedFetch();
-    }, { passive: true });
-
-    elements.downloadBtn?.addEventListener('click', () => {
-        downloadMedia(elements.downloadBtn.getAttribute('data-url'));
-    }, { passive: true });
-
-    // Preload gambar default untuk preview
-    elements.previewImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-});
+    elements.urlInput?.addEventListener('keypress', e =>
