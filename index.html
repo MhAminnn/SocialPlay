@@ -18,8 +18,8 @@
     <meta name="twitter:title" content="SocialPlay - Download Video TikTok & Instagram Tanpa Watermark">
     <meta name="twitter:description" content="Unduh media TikTok dan Instagram secara gratis tanpa watermark dalam kualitas HD. Tanpa iklan dan tanpa batas!">
     <meta name="twitter:image" content="https://socialplay.my.id/socialplay-preview.jpg">
-    <meta name="theme-color" content="#4285f4">
-    <meta name="msapplication-TileColor" content="#4285f4">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="msapplication-TileColor" content="#0d6efd">
     <meta name="application-name" content="SocialPlay">
     <meta name="apple-mobile-web-app-title" content="SocialPlay">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -77,7 +77,19 @@
         </div>
     </div>
 
-    <div class="container" data-scroll>
+    <!-- SocialPlay Section -->
+    <div class="socialplay-section" data-scroll>
+        <div class="socialplay-container">
+            <div class="socialplay-content">
+               <i class="fas fa-play-circle play-icon"></i>
+                <h1 class="socialplay-title">SocialPlay</h1>
+                <p class="socialplay-subtitle">Gulir Ke Bawah Untuk Membuka portal <br> Kebebasan Unduhan Media Sosial</p>
+                <button class="socialplay-explore-btn" id="exploreBtn" aria-label="Explore SocialPlay">Buka Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="container" data-scroll>
         <div class="hero" data-scroll>
             <h1 class="judul">Unduh Media Tiktok & Instagram Tanpa Batas</h1>
             <p class="sub-judul">Get instant previews and information about any TikTok & Instagram Media with just a URL!<br><br><b class="supp">Support : Tiktok & Instagram</b></p>
@@ -98,36 +110,36 @@
         </div>
         
         <div id="videoPreview" data-scroll>
-  <div class="preview-container">
-    <!-- Preview media (video/gambar/carousel) akan ditambahkan secara dinamis di sini -->
-    <div id="mediaPreview"></div>
-    <div id="videoInfo">
-      <h2 style="margin-bottom: 2rem; color: #ffffff; text-align: center; line-height: 1;">
-        <b style="color: greenyellow;">Operasi Berhasil!</b><br>Informasi Video
-      </h2>
-      <hr>
-      <div class="info-item">
-        <span class="info-label">Creator:</span>
-        <span class="info-value" id="authorName"></span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Likes:</span>
-        <span class="info-value" id="likeCount"></span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Comments:</span>
-        <span class="info-value" id="commentCount"></span>
-      </div>
-      <hr style="margin: 1rem 0; border: 1px solid var(--gray-200);">
-      <div class="button-container">
-        <button id="downloadBtn" aria-label="Download Video" style="display: none;">
-          <i class="fas fa-download"></i>
-          Download Video
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+            <div class="preview-container">
+                <!-- Preview media (video/gambar/carousel) akan ditambahkan secara dinamis di sini -->
+                <div id="mediaPreview"></div>
+                <div id="videoInfo">
+                    <h2 style="margin-bottom: 2rem; color: #ffffff; text-align: center; line-height: 1;">
+                        <b style="color: greenyellow;">Operasi Berhasil!</b><br>Informasi Video
+                    </h2>
+                    <hr>
+                    <div class="info-item">
+                        <span class="info-label">Creator:</span>
+                        <span class="info-value" id="authorName"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Likes:</span>
+                        <span class="info-value" id="likeCount"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Comments:</span>
+                        <span class="info-value" id="commentCount"></span>
+                    </div>
+                    <hr style="margin: 1rem 0; border: 1px solid var(--gray-200);">
+                    <div class="button-container">
+                        <button id="downloadBtn" aria-label="Download Video" style="display: none;">
+                            <i class="fas fa-download"></i>
+                            Download Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
     </div>
     <div class="features-section" data-scroll>
@@ -249,9 +261,11 @@
         </div>
     </section>
 
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="script.js"></script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e006d20936450b',t:'MTc0MTU4MDUwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e2ef88dd691383',t:'MTc0MTYxMTAwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e909a29c1fbfbb',t:'MTc0MTY3NDk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
