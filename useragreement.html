@@ -3,188 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perjanjian Pengguna | Website Anda</title>
-    <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            background-image: url('space.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.7);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            line-height: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .logo {
-            font-size: 2rem;
-            line-clamp: 20px;
-            font-weight: 700;
-            color: #4f46e5;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: 2rem;
-            color: #ffffff;
-            margin-bottom: 1rem;
-        }
-
-        .last-updated {
-            font-size: 0.9rem;
-            color: #a0aec0;
-        }
-
-        .card {
-            background-color: rgba(20, 20, 30, 0.8);
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
-        }
-
-        h2 {
-            color: #4f46e5;
-            font-size: 1.5rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        p {
-            margin-bottom: 1rem;
-        }
-
-        ul {
-            margin-bottom: 1.5rem;
-            padding-left: 1.5rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-
-        strong {
-            color: #4f46e5;
-        }
-
-        .button {
-            display: block;
-            background-color: #4f46e5;
-            color: white;
-            text-align: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 2rem auto;
-            max-width: 300px;
-            transition: background-color 0.2s;
-        }
-
-        .button:hover {
-            background-color: #4338ca;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            color: #a0aec0;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        a {
-            color: #4f46e5;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 1.5rem 1rem;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 1.75rem;
-            }
-        }
-    </style>
+    <title>Perjanjian Pengguna - SocialPlay</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" href="styles-2.css">
 </head>
 <body>
-    <div class="overlay">
-        <div class="container">
-            <div class="header">
-                <div class="logo">SocialPlay</div>
-                <h1>Perjanjian Pengguna</h1>
-                <div class="last-updated">Terakhir diperbarui: 28 Februari 2025</div>
+    <nav>
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            SocialPlay
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <div class="fullscreen-menu" id="fullscreenMenu">
+        <button class="close-menu" id="closeMenu" aria-label="Close menu">
+            <i class="fa-solid fa-house"></i>
+        </button>
+        <div class="container-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="useragreement.html" class="menu-item">
+                <i class="fa-regular fa-user"></i>
+                Perjanjian Pengguna 
+            </a>
+            <a href="about.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                Tentang Developer 
+            </a>
+            <a href="terms&service.html" class="menu-item">
+               <i class="fa-solid fa-file-signature"></i>
+                Syarat & Ketentuan
+            </a>
+        </div>
+    </div>
+
+    <div class="container" data-scroll>
+        <div class="hero" data-scroll>
+            <h1 class="judul">Perjanjian Pengguna</h1>
+            <p class="sub-judul">Syarat dan ketentuan penggunaan layanan SocialPlay.</p>
+            <div class="content-section" data-scroll>
+                <h2>1. Penerimaan Perjanjian</h2>
+                <p>Dengan mengakses dan menggunakan layanan SocialPlay, Anda setuju untuk terikat oleh perjanjian pengguna ini. Jika Anda tidak setuju dengan ketentuan ini, silakan tinggalkan situs ini.</p>
+                <h2>2. Penggunaan Layanan</h2>
+                <p>Layanan ini hanya boleh digunakan untuk keperluan pribadi dan non-komersial. Anda dilarang menggunakan layanan ini untuk aktivitas ilegal atau melanggar hak cipta pihak lain.</p>
+                <h2>3. Privasi</h2>
+                <p>Kami menghormati privasi Anda. Data yang Anda berikan akan dilindungi sesuai dengan kebijakan privasi kami.</p>
+                <h2>4. Pembatasan Tanggung Jawab</h2>
+                <p>SocialPlay tidak bertanggung jawab atas kerugian yang mungkin terjadi akibat penggunaan layanan ini.</p>
             </div>
-
-            <div class="card">
-                <p>Selamat datang di website kami. Dengan mengakses dan menggunakan layanan kami, Anda menyetujui untuk terikat dengan perjanjian pengguna ini. Mohon membaca seluruh perjanjian ini dengan seksama.</p>
-
-                <h2>1. Pengantar</h2>
-                <p>Perjanjian Pengguna ini merupakan kontrak hukum antara Anda dan Perusahaan Kami yang mengatur penggunaan Anda atas layanan, fitur, konten, dan aplikasi yang disediakan oleh Perusahaan.</p>
-
-                <h2>2. Akun Pengguna</h2>
-                <p>Untuk menggunakan beberapa fitur Layanan, Anda mungkin perlu membuat Akun. Anda bertanggung jawab atas semua aktivitas yang terjadi di bawah Akun Anda dan menjaga kerahasiaan kata sandi Anda.</p>
-
-                <h2>3. Penggunaan Layanan</h2>
-                <p>Saat menggunakan Layanan kami, Anda setuju untuk mematuhi semua hukum yang berlaku dan tidak menggunakan Layanan untuk tujuan ilegal atau merugikan sistem kami.</p>
-
-                <h2>4. Konten Pengguna</h2>
-                <p>Anda mempertahankan hak atas konten yang Anda unggah, namun memberikan kepada kami lisensi untuk menggunakan konten tersebut sehubungan dengan operasi dan penyediaan Layanan.</p>
-
-                <h2>5. Privasi</h2>
-                <p>Penggunaan Anda atas Layanan kami juga diatur oleh <a href="#">Kebijakan Privasi</a> kami, yang menjelaskan bagaimana kami mengelola informasi pribadi Anda.</p>
-
-                <h2>6. Batasan Tanggung Jawab</h2>
-                <p>Kami tidak bertanggung jawab atas kerugian yang timbul dari penggunaan Layanan, konten pengguna lain, atau akses tidak sah ke server kami.</p>
-
-                <h2>7. Perubahan Perjanjian</h2>
-                <p>Kami dapat mengubah Perjanjian ini dari waktu ke waktu. Penggunaan berkelanjutan Anda atas Layanan setelah perubahan merupakan penerimaan Anda terhadap Perjanjian yang direvisi.</p>
-
-                <h2>8. Kontak</h2>
-                <p>Jika Anda memiliki pertanyaan, silakan hubungi kami di <a href="mailto:kontak@namawebsiteanda.com">alienrektz@gmail.com</a>.</p>
-
-                <a href="index.html" class="button">Saya Menyetujui</a>
-            </div>
-
-            <div class="footer">
-                <p>&copy; 2025 SocialPlay. Seluruh hak cipta dilindungi.</p>
+            <div class="button-container" data-scroll>
+                <a href="index.html" class="back-home-btn">
+                    <i class="fas fa-home"></i>
+                    Kembali ke Home
+                </a>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
