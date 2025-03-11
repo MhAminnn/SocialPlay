@@ -1,15 +1,17 @@
+/* styles.css */
 :root {  
-    --primary: #E60000;  
-    --primary-dark: #E60000;  
-    --secondary: #EC4899;  
-    --dark: #111827;  
-    --light: #FFF;  
-    --gray-50: #E60000;  
-    --gray-100: #F3F4F6;  
-    --gray-200: #E5E7EB;  
-    --gray-700: #374151;  
-    --gradient: linear-gradient(135deg, var(--primary), var(--secondary));  
+    --primary: #0d6efd;  
+    --primary-dark: #151516;  
+    --secondary: #212121;  
+    --dark: #151516;  
+    --light: #ffffff;  
+    --gray-50: #151516;  
+    --gray-100: #212121;  
+    --gray-200: #333333;  
+    --gray-700: #cccccc;  
+    --gradient: linear-gradient(135deg, #0d6efd, #212121);  
 }  
+
 * {  
     margin: 0;  
     padding: 0;  
@@ -17,27 +19,27 @@
     font-family: 'Poppins', sans-serif;  
 }  
 
-body {  
-    background: #F2F1F7;
-    color: var(--dark);  
-    line-height: 1.6;  
-    overflow-x: hidden;
-}  
-
 .supp {
     color: greenyellow;
 }
+
+body {  
+    background: #151516;  
+    color: var(--light);  
+    line-height: 1.6;  
+    overflow-x: hidden;  
+}  
 
 nav {  
     display: flex;  
     justify-content: space-between;  
     align-items: center;  
     padding: 1rem 2rem;  
-    background: #F2F1F7;
-    background-position: center;
-    background-size: cover;
+    background: #212121;  
+    background-position: center;  
+    background-size: cover;  
     backdrop-filter: blur(10px);  
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);  
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);  
     position: fixed;  
     width: 100%;  
     top: 0;  
@@ -55,10 +57,7 @@ nav {
     animation: slideIn 0.5s ease-out;
     transition: transform 0.3s ease;
     font-weight: 700;  
-    color: #000; 
-    background: var(--gradient);
-    -webkit-background-clip: text;  
-    -webkit-text-fill-color: transparent;
+    color: #ffffff; 
     display: flex;  
     align-items: center;  
     gap: 0.5rem;  
@@ -80,8 +79,8 @@ nav {
 
 .menu-toggle:hover {  
     transform: translateY(-2px);  
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-    background: #002AFF;
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+    background: #0d6efd;
 }  
 
 .fullscreen-menu {  
@@ -90,9 +89,9 @@ nav {
     left: 0;  
     width: 100%;
     height: 100%; 
-    background: #2335FF;
+    background: #212121;
     border: 1px solid rgba(255, 255, 255, 0.18); 
-    box-shadow: 0 -2px 20px rgba(0,0,0,0.1);  
+    box-shadow: 0 -2px 20px rgba(0,0,0,0.3);  
     transition: all 0.3s ease-in-out;  
     z-index: 1001;  
     padding-top: 5rem;  
@@ -105,7 +104,7 @@ nav {
 .menu-item {
     display: flex;
     padding: 1.2rem 2rem;
-    color: #FFFFFF;
+    color: #ffffff;
     font-weight: 400;
     margin-top: 8px;
     text-align: center;
@@ -123,7 +122,7 @@ nav {
 }
 
 .menu-item:hover {  
-    background: #ffffff;  
+    background: #333333;  
     color: var(--primary);  
     border-bottom: 4px solid var(--primary);
 }
@@ -167,12 +166,14 @@ nav {
     transform: rotate(90deg);  
 }  
 
-.container {  
+#container {  
     max-width: 1200px;  
     margin: 7rem auto 2rem;
-    background: #ffffff;
+    background: #212121;
     margin-bottom: 100px;
-    padding: 0 1rem;
+    padding: 1rem 1rem;
+    margin-top: 10vh;
+    
 }  
 
 .hero {  
@@ -180,17 +181,17 @@ nav {
     margin-bottom: 3rem;  
     background-repeat: no-repeat;
     padding: 3rem;  
-    background: rgba(7, 0, 255, 0.68);
+    background: rgba(13, 110, 253, 0.7);
     border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(18.4px);
     -webkit-backdrop-filter: blur(18.4px);
-    border: 1px solid rgba(7, 0, 255, 0.18);
+    border: 1px solid rgba(13, 110, 253, 0.18);
     background-position: center;
     background-size: cover;
     filter: brightness(100%);
     border-radius: 20px;  
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);  
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);  
 }  
 
 .judul {  
@@ -204,7 +205,7 @@ nav {
 .sub-judul {
     font-size: 15px;
     line-height: 1.1;
-    color: #D1D1D1;
+    color: #cccccc;
     max-width: 600px;
     margin: 0 auto 2rem;
 }
@@ -215,7 +216,7 @@ nav {
     background-position: center;
     padding: 2rem;  
     border-radius: 20px;  
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);  
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);  
 }  
 
 .input-group {  
@@ -236,12 +237,14 @@ nav {
     border-radius: 12px;  
     font-size: 1rem;  
     transition: all 0.3s ease;  
+    background: #333333;
+    color: #ffffff;
 }  
 
 #urlInput:focus {  
     border-color: var(--primary);  
     outline: none;  
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);  
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);  
 }  
 
 button {  
@@ -259,10 +262,10 @@ button {
 }  
 
 button:hover {  
-    background-color: #0d6efd;  
+    background: #0d6efd;  
     color: var(--light);  
     transform: translateY(-2px);  
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);  
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);  
 }  
 
 .loading-container {
@@ -284,15 +287,15 @@ button:hover {
     height: 50px;
     border: 5px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: #ffffff;
     animation: spin 1s ease-in-out infinite;
 }
 
 #videoPreview {
     display: none;
-    background-color: #E3E3E6;
+    background-color: #333333;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     margin-top: 2rem;
     padding: 2rem;
 }
@@ -310,7 +313,7 @@ button:hover {
     object-fit: cover;
     border-radius: 12px;
     margin-bottom: 2rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .carousel {
@@ -338,7 +341,7 @@ button:hover {
     height: 400px;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-item .download-btn {
@@ -359,7 +362,7 @@ button:hover {
 .carousel-item .download-btn:hover {
     background: #0d6efd;
     transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
 }
 
 .carousel-btn {
@@ -391,12 +394,12 @@ button:hover {
     width: 100%;
     max-width: 500px;
     padding: 1.5rem;
-    background: rgba(7, 0, 255, 0.68);
+    background: rgba(13, 110, 253, 0.7);
     border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(18.4px);
     -webkit-backdrop-filter: blur(18.4px);
-    border: 1px solid rgba(7, 0, 255, 0.18);
+    border: 1px solid rgba(13, 110, 253, 0.18);
 }
 
 .info-item {  
@@ -423,7 +426,7 @@ button:hover {
 
 #downloadBtn {  
     width: 100%;  
-    background: #FE41EE;
+    background: #212121;
     justify-content: center; 
     color: #fff;
     font-weight: bold;
@@ -450,26 +453,26 @@ button:hover {
 
 .features-section {
     padding: 2rem 1rem;
-    background-color: #F2F1F7;
-    color: #374151;
+    background-color: #212121;
+    color: #cccccc;
 }
 
 .container-features {
-    background: #F2F1F7;
+    background: #212121;
 }
 
 .features-title {
     font-size: 2.5rem;
     line-height: 1;
     font-weight: 800;
-    color: #120F0F;
+    color: #ffffff;
     margin-bottom: 1rem;
     text-align: center;
 }
 
 .features-subtitle {
     font-size: 1.2rem;
-    color: #6B7280;
+    color: #cccccc;
     max-width: 600px;
     margin: 0 auto 2rem;
     text-align: center;
@@ -486,26 +489,26 @@ button:hover {
 }
 
 .feature-item {
-    background-color: #FFF;
-    border: 1px solid #FFF;
+    background-color: #333333;
+    border: 1px solid #333333;
     border-radius: 8px;
     padding: 1.5rem;
     width: 100%;
     max-width: 300px;
     text-align: left;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-item:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .feature-icon {
     width: 40px;
     height: 40px;
-    background-color: #E5E7EB;
+    background-color: #0d6efd;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -515,19 +518,19 @@ button:hover {
 
 .feature-icon i {
     font-size: 1.2rem;
-    color: #374151;
+    color: #ffffff;
 }
 
 .feature-name {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #111827;
+    color: #ffffff;
 }
 
 .feature-description {
     font-size: 0.95rem;
-    color: #6B7280;
+    color: #cccccc;
     line-height: 1.6;
 }
 
@@ -541,23 +544,40 @@ button:hover {
     font-weight: bold;
     line-height: 1.2;
     margin-bottom: 10px;
+    color: #ffffff;
 }
 
 .tools {
     font-size: 18px;
     line-height: 1;
     font-weight: normal;
-    color: #42445A;
+    color: #cccccc;
     text-align: center;
 }
 
 .gradient-text {
     line-height: 1.2px;
     font-size: 28px;
-    background: linear-gradient(to right, #ec4899, #a855f7, #14b8a6);
+    background: linear-gradient(to right, #0d6efd, #0d6efd, #ffffff, #ffffff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShift 5s infinite alternate;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 100%;
+    }
+}
+
+.play-icon {
+    font-size: 50px; 
+    background: linear-gradient(to right, #0d6efd, #0d6efd, #4330EB, #0d6efd); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
 }
 
 .relative {  
@@ -576,7 +596,7 @@ button:hover {
 
 .usage-guide {
     padding: 30px 20px;
-    background-color: #120930;
+    background-color: #212121;
     border-radius: 5px;
     text-align: center;
     position: relative;
@@ -599,10 +619,10 @@ button:hover {
 }
 
 .step-item {
-    background: #fff;
+    background: #333333;
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     text-align: left;
     transition: transform 0.4s ease-out, box-shadow 0.3s ease;
     position: relative;
@@ -610,30 +630,30 @@ button:hover {
 }
 
 .step-item:nth-child(1) {
-    background: linear-gradient(135deg, #000, #3243FF);
-    color: #fff;
+    background: linear-gradient(135deg, #151516, #0d6efd);
+    color: #ffffff;
 }
 
 .step-item:nth-child(2) {
-    background: linear-gradient(135deg, #000, #4267B2);
-    color: #fff;
+    background: linear-gradient(135deg, #151516, #212121);
+    color: #ffffff;
 }
 
 .step-item:nth-child(3) {
-    background: linear-gradient(135deg, #000, #FF4444);
-    color: #fff;
+    background: linear-gradient(135deg, #151516, #333333);
+    color: #ffffff;
 }
 
 .step-item:hover {
     transform: translateY(-15px) scale(1.03);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
 .step-number {
     width: 50px;
     height: 50px;
     background: rgba(255, 255, 255, 0.9);
-    color: #333;
+    color: #151516;
     font-size: 1.5rem;
     font-weight: 600;
     display: flex;
@@ -647,8 +667,8 @@ button:hover {
 
 .step-item:hover .step-number {
     transform: rotate(360deg);
-    background: #FFBB33;
-    color: #fff;
+    background: #0d6efd;
+    color: #ffffff;
 }
 
 .icon-step {
@@ -660,15 +680,15 @@ button:hover {
 
 .step-item:hover .icon-step {
     transform: scale(1.2);
-    color: #FFBB33;
+    color: #0d6efd;
 }
 
 .step-item h3 {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
-    color: #fff;
+    color: #ffffff;
     margin-bottom: 15px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
 }
 
@@ -681,7 +701,7 @@ button:hover {
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .step-item::before {
@@ -692,7 +712,7 @@ button:hover {
     right: -5px;
     bottom: -5px;
     border-radius: 25px;
-    background: linear-gradient(45deg, #FF4444, #00C851, #4267B2, #800080);
+    background: linear-gradient(45deg, #0d6efd, #212121, #333333, #151516);
     z-index: -1;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -703,7 +723,7 @@ button:hover {
 }
 
 .hero-section {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(45, 45, 45, 0.9)), 
+    background: linear-gradient(180deg, rgba(21, 21, 22, 0.9), rgba(33, 33, 33, 0.9)), 
                 url('https://www.transparenttextures.com/patterns/video-play.png') center/cover no-repeat;
     padding: 60px 20px;
     text-align: center;
@@ -731,13 +751,13 @@ button:hover {
 .sub-title {
     font-size: 18px;
     font-weight: 400;
-    color: #b0b0b0;
+    color: #cccccc;
     line-height: 1.5;
     margin-bottom: 30px;
 }
 
 .join-button {
-    background-color: #333333;
+    background-color: #0d6efd;
     color: #ffffff;
     border: none;
     padding: 12px 24px;
@@ -757,7 +777,7 @@ button:hover {
 }
 
 .join-button:hover {
-    background-color: #555555;
+    background-color: #0d6efd;
     transform: translateY(-2px);
 }
 
@@ -782,7 +802,7 @@ button:hover {
 .footer-logo-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #4285f4, #a855f7);
+    background: linear-gradient(135deg, #0d6efd, #212121);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -791,12 +811,12 @@ button:hover {
 }
 
 .footer-logo-icon i {
-    font-size: 20px; /* Diperbaiki dari 80px yang terlalu besar */
+    font-size: 20px; 
     color: #ffffff;
 }
 
 .footer-logo-text {
-    font-size: 24px; /* Diperbaiki dari 800px yang tidak realistis */
+    font-size: 24px; 
     font-weight: 600;
     color: #ffffff;
 }
@@ -832,12 +852,12 @@ button:hover {
 
 .social-link:hover {
     transform: translateY(-3px);
-    color: #00b7ff;
+    color: #0d6efd;
 }
 
 .social-link:hover i,
 .social-link:hover .social-text {
-    color: #00b7ff;
+    color: #0d6efd;
 }
 
 .social-link:active {
@@ -846,7 +866,7 @@ button:hover {
 
 .footer-credit {
     font-size: 20px;
-    color: #b0b0b0;
+    color: #cccccc;
     font-weight: 400;
     margin-top: 20px;
 }
@@ -862,6 +882,72 @@ button:hover {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* SocialPlay Section Styles */
+.socialplay-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(21, 21, 22, 0.8), rgba(33, 33, 33, 0.8)), url('cosmic-background.jpg') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.socialplay-container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.socialplay-content {
+    position: relative;
+}
+
+.paw-icon {
+    width: 80px;
+    margin-bottom: 1rem;
+    animation: float 4s ease-in-out infinite;
+}
+
+.socialplay-title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1rem;
+}
+
+.socialplay-subtitle {
+    font-size: 1.5rem;
+    color: #cccccc;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 2rem;
+}
+
+.socialplay-explore-btn {
+    padding: 1rem 2rem;
+    background: var(--gradient);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem; /* Ensure space between explore and scroll buttons */
+}
+
+.socialplay-explore-btn:hover {
+    background: #0d6efd;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.5);
+}
+
+
 
 /* Keyframes */
 @keyframes spin {
@@ -890,6 +976,12 @@ button:hover {
     100% { transform: translateY(0); }
 }
 
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+    40% { transform: translateY(-10px) translateX(-50%); }
+    60% { transform: translateY(-5px) translateX(-50%); }
+}
+
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     100% { background-position: 100% 50%; }
@@ -901,136 +993,4 @@ button:hover {
     100% { transform: scale(1); }
 }
 
-/* Media Queries */
-@media (max-width: 768px) {  
-    .input-group {  
-        flex-direction: column;  
-    }  
-    
-    #previewImage {  
-        height: auto;  
-    }  
-
-    .carousel {
-        max-width: 100%;
-    }
-
-    .main-title {
-        font-size: 36px;
-    }
-
-    .sub-title {
-        font-size: 16px;
-    }
-
-    .join-button {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-
-    .social-icons {
-        gap: 20px;
-    }
-
-    .social-link i {
-        font-size: 20px;
-    }
-
-    .social-text {
-        font-size: 12px;
-    }
-
-    .footer-logo-icon {
-        width: 35px;
-        height: 35px;
-    }
-
-    .footer-logo-icon i {
-        font-size: 18px;
-    }
-
-    .footer-logo-text {
-        font-size: 20px;
-    }
-
-    .footer-credit {
-        font-size: 12px;
-    }
-}
-
-@media (min-width: 768px) {
-    .title {
-        font-size: 3rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .title {
-        font-size: 3.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-title {
-        font-size: 28px;
-    }
-
-    .sub-title {
-        font-size: 14px;
-    }
-
-    .join-button {
-        padding: 8px 16px;
-        font-size: 12px;
-    }
-
-    .social-icons {
-        gap: 15px;
-    }
-
-    .social-link i {
-        font-size: 18px;
-    }
-
-    .social-text {
-        font-size: 10px;
-    }
-
-    .footer-logo-icon {
-        width: 30px;
-        height: 30px;
-    }
-
-    .footer-logo-icon i {
-        font-size: 16px;
-    }
-
-    .footer-logo-text {
-        font-size: 18px;
-    }
-
-    .footer-credit {
-        font-size: 10px;
-    }
-}
-
-/* Animasi untuk spinner */
-.bounce-spin {
-    animation: bounceSpin 1.5s infinite ease-in-out;
-}
-
-@keyframes bounceSpin {
-    0% {
-        transform: rotate(0deg) translateY(0);
-    }
-    50% {
-        transform: rotate(180deg) translateY(-10px);
-    }
-    100% {
-        transform: rotate(360deg) translateY(0);
-    }
-}
-
-/* Animasi untuk teks */
-.pulse-text {
-    animation: pulseText 1.5s
+/* Media
