@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download video TikTok dan Instagram tanpa watermark dengan SocialPlay. Unduh video dalam kualitas HD dan MP4 secara gratis, cepat, dan tanpa ribet.">
+    <meta name="keywords" content="download video TikTok, TikTok downloader, tanpa watermark, downloader tiktok, SocialPlay, download Instagram, Instagram tanpa watermark, download reels, download foto IG, download story IG, Tiktok no watermark, scraping tool, unduh video Instagram, video downloader, social media downloader, aplikasi unduh video, TikTok MP4, Instagram MP4, HD video, free downloader">
+    <meta name="author" content="Muh Amin Arsyad">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="id, en">
+    <meta property="og:title" content="SocialPlay - Download Video TikTok & Instagram Tanpa Watermark">
+    <meta property="og:description" content="Unduh media TikTok dan Instagram secara gratis tanpa watermark dalam kualitas HD. Tanpa iklan dan tanpa batas!">
+    <meta property="og:image" content="https://socialplay.my.id/socialplay-preview.jpg">
+    <meta property="og:url" content="https://socialplay.my.id/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SocialPlay">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SocialPlay - Download Video TikTok & Instagram Tanpa Watermark">
+    <meta name="twitter:description" content="Unduh media TikTok dan Instagram secara gratis tanpa watermark dalam kualitas HD. Tanpa iklan dan tanpa batas!">
+    <meta name="twitter:image" content="https://socialplay.my.id/socialplay-preview.jpg">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="msapplication-TileColor" content="#0d6efd">
+    <meta name="application-name" content="SocialPlay">
+    <meta name="apple-mobile-web-app-title" content="SocialPlay">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="canonical" href="https://socialplay.my.id/">
+    <link rel="alternate" hreflang="id" href="https://socialplay.my.id/">
+    <link rel="alternate" hreflang="en" href="https://socialplay.my.id/en/">
+    <title>SocialPlay - Download Video TikTok & Instagram Tanpa Watermark | Unduh Media Sosial Gratis</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            SocialPlay
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <div class="fullscreen-menu" id="fullscreenMenu">
+        <button class="close-menu" id="closeMenu" aria-label="Close menu">
+            <i class="fa-solid fa-house"></i>
+        </button>
+        <div class="container-menu">
+            <a href="index.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="useragreement.html" class="menu-item">
+                <i class="fa-regular fa-user"></i>
+                Perjanjian Pengguna 
+            </a>
+            <a href="about.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                Tentang Developer 
+            </a>
+            <a href="terms&service.html" class="menu-item">
+               <i class="fa-solid fa-file-signature"></i>
+                Syarat & Ketentuan
+            </a>
+        </div>
+    </div>
+
+    <!-- SocialPlay Section -->
+    <div class="socialplay-section" data-scroll>
+        <div class="socialplay-container">
+            <div class="socialplay-content">
+               <i class="fas fa-play-circle play-icon"></i>
+                <h1 class="socialplay-title">SocialPlay</h1>
+                <p class="socialplay-subtitle">Gulir Ke Bawah Untuk Membuka portal <br> Kebebasan Unduhan Media Sosial</p>
+                <button class="socialplay-explore-btn" id="exploreBtn" aria-label="Explore SocialPlay">Buka Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="container" data-scroll>
+        <div class="hero" data-scroll>
+            <h1 class="judul">Unduh Media Tiktok & Instagram Tanpa Batas</h1>
+            <p class="sub-judul">Get instant previews and information about any TikTok & Instagram Media with just a URL!<br><br><b class="supp">Support : Tiktok & Instagram</b></p>
+            <div class="input-section" data-scroll>
+                <div class="input-group">
+                    <input type="text" id="urlInput" placeholder="Paste URL Anda" aria-label="Paste URL TikTok">
+                    <button id="fetchBtn" aria-label="Search Video">
+                        <i class="fas fa-search"></i>
+                        Search Video
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="loading-container" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p id="loadingText" style="margin-top: 1rem; color: white; font-weight: bold;">Sedang Mencari 🔎</p>
+        </div>
+        
+        <div id="videoPreview" data-scroll>
+            <div class="preview-container">
+                <!-- Preview media (video/gambar/carousel) akan ditambahkan secara dinamis di sini -->
+                <div id="mediaPreview"></div>
+                <div id="videoInfo">
+                    <h2 style="margin-bottom: 2rem; color: #ffffff; text-align: center; line-height: 1;">
+                        <b style="color: greenyellow;">Operasi Berhasil!</b><br>Informasi Video
+                    </h2>
+                    <hr>
+                    <div class="info-item">
+                        <span class="info-label">Creator:</span>
+                        <span class="info-value" id="authorName"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Likes:</span>
+                        <span class="info-value" id="likeCount"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Comments:</span>
+                        <span class="info-value" id="commentCount"></span>
+                    </div>
+                    <hr style="margin: 1rem 0; border: 1px solid var(--gray-200);">
+                    <div class="button-container">
+                        <button id="downloadBtn" aria-label="Download Video" style="display: none;">
+                            <i class="fas fa-download"></i>
+                            Download Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="features-section" data-scroll>
+        <div class="container-features">
+            <h1 class="features-title" data-scroll>The Future<br> Of Video Downloading.</h1>
+            <p class="features-subtitle" data-scroll>SocialPlay is designed to help you download TikTok and Instagram videos instantly, without breaking a sweat.</p>
+            <div class="features-list">
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-download"></i></div>
+                    <h3 class="feature-name">Video Downloader</h3>
+                    <p class="feature-description">Download TikTok and Instagram videos in HD quality without watermark effortlessly.</p>
+                </div>
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <h3 class="feature-name">High-Speed Processing</h3>
+                    <p class="feature-description">Access fast download speeds and instant previews with just a URL.</p>
+                </div>
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3 class="feature-name">Secure Downloads</h3>
+                    <p class="feature-description">Securely process downloads with no ads and full privacy protection.</p>
+                </div>
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <h3 class="feature-name">Multi-Platform Support</h3>
+                    <p class="feature-description">Supports downloading from TikTok, Instagram, and more platforms.</p>
+                </div>
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-cogs"></i></div>
+                    <h3 class="feature-name">Custom Settings</h3>
+                    <p class="feature-description">Adjust resolution and format for your downloaded videos.</p>
+                </div>
+                <div class="feature-item" data-scroll>
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3 class="feature-name">24/7 Support</h3>
+                    <p class="feature-description">Get help anytime with our dedicated support team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <div class="populer" data-scroll>
+        <h1 class="title">
+            The Most Popular 
+            <span class="gradient-text"><br> Tools Scraping Untuk TikTok & Instagram
+        </h1>
+        <p class="tools">
+            Tools Scraping yang Dirancang untuk Kemudahan & Kecepatan
+        </p>
+    </div>
+
+    <div class="relative" data-scroll>
+        <img alt="Smartphone displaying Instagram video with download icons" class="w-60 mx-60" src="downloader_instagram.png"/>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 p-2 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <section class="usage-guide" data-scroll>
+        <h3 class="usage-title" data-scroll>3 Cara<br> Penggunaan SocialPlay </h3> <br>
+        <div class="steps-container">
+            <div class="step-item" data-scroll>
+                <div class="step-number">1</div>
+                <i class="fas fa-link icon-step"></i>
+                <h3>Salin URL Media</h3>
+                <p>Buka TikTok atau Instagram, temukan video atau foto yang ingin Anda unduh, lalu salin URL-nya dari aplikasi atau browser.</p>
+            </div>
+            <div class="step-item" data-scroll>
+                <div class="step-number">2</div>
+                <i class="fas fa-paste icon-step"></i>
+                <h3>Tempel URL</h3>
+                <p>Masukkan URL yang telah disalin ke kolom input di halaman utama SocialPlay, lalu klik tombol "Search Video".</p>
+            </div>
+            <div class="step-item" data-scroll>
+                <div class="step-number">3</div>
+                <i class="fas fa-download icon-step"></i>
+                <h3>Unduh Media</h3>
+                <p>Setelah preview muncul, klik tombol "Download Video" untuk menyimpan media tanpa watermark dalam kualitas HD.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="notification" id="notificationBox"></div>
+
+    <section class="hero-section" data-scroll>
+        <div class="hero-content" data-scroll>
+            <h1 class="main-title">Buka dan jelajahi dunia TikTok dan Instagram dengan downloader tanpa iklan, kualitas HD, dan tanpa langganan!</h1>
+            <p class="sub-title">Buka potensi Kretifitas Dari Dalam Diri Anda Dengan Membiarkan AI Bekerja Dan Menghasilkan Konten Sosial Media Untuk Anda </p><br>
+            <button class="join-button">
+                Gabung komunitas kami <i class="fas fa-bolt"></i>
+            </button>
+        </div>
+        <div class="footer-content" data-scroll>
+            <div class="footer-branding">
+                <span class="footer-logo-icon"><i class="fas fa-play-circle"></i></span>
+                <span class="footer-logo-text">SocialPlay</span>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com" target="_blank" class="social-link" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                    <span class="social-text">Facebook</span>
+                </a>
+                <a href="https://www.tiktok.com" target="_blank" class="social-link" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                    <span class="social-text">TikTok</span>
+                </a>
+                <a href="https://www.github.com" target="_blank" class="social-link" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                    <span class="social-text">GitHub</span>
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="social-link" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span class="social-text">Instagram</span>
+                </a>
+            </div>
+            <p class="footer-credit">© 2025 SocialPlay. All rights reserved.<br> Made With ❤️ Muh Amin Arsyad</p>
+        </div>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e006d20936450b',t:'MTc0MTU4MDUwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e2ef88dd691383',t:'MTc0MTYxMTAwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e909a29c1fbfbb',t:'MTc0MTY3NDk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
