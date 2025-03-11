@@ -1,3 +1,4 @@
+// script.js
 function encryptApiKey(key) {
     return btoa(key.split('').reverse().join(''));
 }
@@ -56,13 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
         urlInput: document.getElementById('urlInput'),
         videoPreview: document.getElementById('videoPreview'),
         downloadBtn: document.getElementById('downloadBtn'),
-        mediaPreview: document.getElementById('mediaPreview'), // Gantikan previewImage dan carouselPreview
+        mediaPreview: document.getElementById('mediaPreview'),
         authorName: document.getElementById('authorName'),
         likeCount: document.getElementById('likeCount'),
         commentCount: document.getElementById('commentCount'),
         loadingSpinner: document.getElementById('loadingSpinner'),
         loadingText: document.getElementById('loadingText'),
-        notificationBox: document.getElementById('notificationBox')
+        notificationBox: document.getElementById('notificationBox'),
+        exploreBtn: document.getElementById('exploreBtn'),
+        scrollDownBtn: document.getElementById('scrollDownBtn')
     };
 
     // Animasi scrolling dinamis
@@ -178,13 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.likeCount.textContent = formatNumber(type === 'tiktok' ? data.digg_count : data.metrics?.like_count);
         elements.commentCount.textContent = formatNumber(type === 'tiktok' ? data.comment_count : data.metrics?.comment_count);
 
-        // Bersihkan preview sebelumnya
         elements.mediaPreview.innerHTML = '';
         elements.downloadBtn.style.display = 'none';
 
         if (type === 'tiktok') {
             if (data.images && Array.isArray(data.images)) {
-                // Gambar slide (carousel)
                 const carousel = document.createElement('div');
                 carousel.className = 'carousel';
                 carousel.innerHTML = `
@@ -224,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateCarousel();
                 };
             } else {
-                // Video TikTok
                 const videoUrl = data.hdplay || data.play;
                 if (videoUrl) {
                     const videoElement = document.createElement('video');
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     videoElement.style.height = '400px';
                     videoElement.style.objectFit = 'cover';
                     videoElement.style.borderRadius = '12px';
-                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
                     videoElement.style.marginBottom = '2rem';
 
                     elements.mediaPreview.appendChild(videoElement);
@@ -250,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (data.carousel_media && Array.isArray(data.carousel_media)) {
-                // Gambar slide Instagram (carousel)
                 const carousel = document.createElement('div');
                 carousel.className = 'carousel';
                 carousel.innerHTML = `
@@ -292,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateCarousel();
                 };
             } else {
-                // Video atau Gambar Tunggal Instagram
                 const isVideo = data.is_video;
                 const mediaUrl = isVideo ? data.video_url : data.display_url;
                 const previewUrl = isVideo ? (data.thumbnail_url || data.display_url) : data.display_url;
@@ -306,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     videoElement.style.height = '400px';
                     videoElement.style.objectFit = 'cover';
                     videoElement.style.borderRadius = '12px';
-                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    videoElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
                     videoElement.style.marginBottom = '2rem';
 
                     elements.mediaPreview.appendChild(videoElement);
@@ -324,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     imageElement.style.height = '400px';
                     imageElement.style.objectFit = 'cover';
                     imageElement.style.borderRadius = '12px';
-                    imageElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                    imageElement.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
                     imageElement.style.marginBottom = '2rem';
 
                     elements.mediaPreview.appendChild(imageElement);
@@ -478,26 +476,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    elements.downloadBtn?.addEventListener('click', () => {
-        const url = elements.downloadBtn.getAttribute('data-url');
-        const isVideo = elements.downloadBtn.textContent.includes('Video');
-        downloadMedia(url, isVideo ? 'video' : 'image');
-    });
-
-    const processClipboard = async () => {
-        try {
-            const text = await navigator.clipboard.readText();
-            const urlRegex = /(https?:\/\/(?:www\.)?(?:tiktok\.com|instagram\.com)\/[^\s]+)/i;
-            const match = text.match(urlRegex);
-            
-            if (match && match[1]) {
-                elements.urlInput.value = match[1];
-                showNotification('URL dari clipboard ditemukan!', 'success');
-            }
-        } catch (error) {
-            console.error('Clipboard error:', error);
-        }
-    };
-
-    processClipboard();
-});
+    elements.downloadBtn?.addEventLis
