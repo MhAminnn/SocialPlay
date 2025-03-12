@@ -256,7 +256,7 @@ nav {
     border-radius: 12px;  
     font-weight: 600;  
     cursor: pointer;  
-    transition: all 0.3s ease;  
+    transition: all 0.12s ease;  
     display: inline-flex;  
     align-items: center;  
     gap: 0.5rem;  
